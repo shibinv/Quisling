@@ -1,0 +1,24 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Quisling", "Quisling\Quisling\Quisling.csproj", "{EB732EFE-C068-47AB-AAD5-B5E00736FB02}"
+EndProject
+Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "QuislingContent", "Quisling\QuislingContent\QuislingContent.contentproj", "{737C110F-1CC3-4675-91B4-1CA0CC688D86}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x86 = Debug|x86
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EB732EFE-C068-47AB-AAD5-B5E00736FB02}.Debug|x86.ActiveCfg = Debug|x86
+		{EB732EFE-C068-47AB-AAD5-B5E00736FB02}.Debug|x86.Build.0 = Debug|x86
+		{EB732EFE-C068-47AB-AAD5-B5E00736FB02}.Release|x86.ActiveCfg = Release|x86
+		{EB732EFE-C068-47AB-AAD5-B5E00736FB02}.Release|x86.Build.0 = Release|x86
+		{737C110F-1CC3-4675-91B4-1CA0CC688D86}.Debug|x86.ActiveCfg = Debug|x86
+		{737C110F-1CC3-4675-91B4-1CA0CC688D86}.Release|x86.ActiveCfg = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
