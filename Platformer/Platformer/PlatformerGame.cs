@@ -1,6 +1,6 @@
 #region File Description
 //-----------------------------------------------------------------------------
-// PlatformerGame.cs
+// QuislingGame.cs
 //
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
