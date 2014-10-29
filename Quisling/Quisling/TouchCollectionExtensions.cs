@@ -9,7 +9,7 @@
 
 using Microsoft.Xna.Framework.Input.Touch;
 
-namespace Platformer
+namespace Quisling
 {
     /// <summary>
     /// Provides extension methods for the TouchCollection type.

@@ -16,12 +16,12 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Input.Touch;
 
 
-namespace Platformer
+namespace Quisling
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class PlatformerGame : Microsoft.Xna.Framework.Game
+    public class QuislingGame : Microsoft.Xna.Framework.Game
     {
         // Resources for drawing.
         private GraphicsDeviceManager graphics;
@@ -55,7 +55,7 @@ namespace Platformer
         // or handle exceptions, both of which can add unnecessary time to level loading.
         private const int numberOfLevels = 3;
 
-        public PlatformerGame()
+        public QuislingGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
