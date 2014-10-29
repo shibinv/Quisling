@@ -134,11 +134,11 @@ namespace Quisling
         public void LoadContent()
         {
             // Load animated textures.
-            idleAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/idle3"), 0.1f, true);
-            runAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/run3"), 0.1f, true);
-            jumpAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/Idle"), 0.1f, false);
-            celebrateAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/Celebrate"), 0.1f, false);
-            dieAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/Die"), 0.1f, false);
+            idleAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/halo-idle"), 0.1f, true);
+            runAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/halo-walk"), 0.1f, true);
+            jumpAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/halo-jump"), 0.5f, false);
+            celebrateAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/halo-crouch"), 0.1f, false);
+            dieAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/halo-jump"), 0.1f, false);
 
             // Calculate bounds within texture size.            
             int width = (int)(idleAnimation.FrameWidth * 0.4);
@@ -147,11 +147,12 @@ namespace Quisling
             int top = idleAnimation.FrameHeight - height;
             localBounds = new Rectangle(left, top, width, height);
 
-            //int width = (int)(idleAnimation.FrameWidth);
+            // Calculate bounds within texture size.            
+            //int width = (int)(idleAnimation.FrameWidth * 0.4);
             //int left = (idleAnimation.FrameWidth - width) / 2;
-            //int height = (int)(idleAnimation.FrameWidth);
+            //int height = (int)(idleAnimation.FrameWidth * 0.8);
             //int top = idleAnimation.FrameHeight - height;
-            //localBounds = new Rectangle(0, 0, 90, 105);
+            //localBounds = new Rectangle(0, 0, 88, 109);
 
 
             // Load sounds.            
