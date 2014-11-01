@@ -91,6 +91,7 @@ namespace Quisling
 
             // Calculate the source rectangle of the current frame.
             Rectangle source = new Rectangle(FrameIndex * Animation.Texture.Height, 0, Animation.Texture.Height, Animation.Texture.Height);
+            //Rectangle source = new Rectangle(FrameIndex * 100, 0, 100, Animation.Texture.Height);
 
             // Draw the current frame.
             spriteBatch.Draw(Animation.Texture, position, source, Color.White, 0.0f, Origin, 1.0f, spriteEffects, 0.0f);
