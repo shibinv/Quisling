@@ -14,13 +14,11 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
 
-namespace Quisling
-{
+namespace Quisling {
     /// <summary>
     /// Our fearless adventurer!
     /// </summary>
-    class Player
-    {
+    class Player {
         // Animations
         private Animation idleAnimation;
         private Animation runAnimation;
@@ -35,21 +33,18 @@ namespace Quisling
         private SoundEffect jumpSound;
         private SoundEffect fallSound;
 
-        public Level Level
-        {
+        public Level Level {
             get { return level; }
         }
         Level level;
 
-        public bool IsAlive
-        {
+        public bool IsAlive {
             get { return isAlive; }
         }
         bool isAlive;
 
         // Physics state
-        public Vector2 Position
-        {
+        public Vector2 Position {
             get { return position; }
             set { position = value; }
         }
@@ -57,8 +52,7 @@ namespace Quisling
 
         private float previousBottom;
 
-        public Vector2 Velocity
-        {
+        public Vector2 Velocity {
             get { return velocity; }
             set { velocity = value; }
         }
@@ -75,7 +69,7 @@ namespace Quisling
         private const float JumpLaunchVelocity = -3500.0f;
         private const float GravityAcceleration = 3400.0f;
         private const float MaxFallSpeed = 550.0f;
-        private const float JumpControlPower = 0.14f; 
+        private const float JumpControlPower = 0.14f;
 
         // Input configuration
         private const float MoveStickScale = 1.0f;
@@ -85,8 +79,7 @@ namespace Quisling
         /// <summary>
         /// Gets whether or not the player's feet are on the ground.
         /// </summary>
-        public bool IsOnGround
-        {
+        public bool IsOnGround {
             get { return isOnGround; }
         }
         bool isOnGround;
@@ -105,10 +98,8 @@ namespace Quisling
         /// <summary>
         /// Gets a rectangle which bounds this player in world space.
         /// </summary>
-        public Rectangle BoundingRectangle
-        {
-            get
-            {
+        public Rectangle BoundingRectangle {
+            get {
                 int left = (int)Math.Round(Position.X - sprite.Origin.X) + localBounds.X;
                 int top = (int)Math.Round(Position.Y - sprite.Origin.Y) + localBounds.Y;
 
@@ -119,8 +110,7 @@ namespace Quisling
         /// <summary>
         /// Constructors a new player.
         /// </summary>
-        public Player(Level level, Vector2 position)
-        {
+        public Player(Level level, Vector2 position) {
             this.level = level;
 
             LoadContent();
@@ -131,19 +121,18 @@ namespace Quisling
         /// <summary>
         /// Loads the player sprite sheet and sounds.
         /// </summary>
-        public void LoadContent()
-        {
+        public void LoadContent() {
             // Load animated textures.
-            idleAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/halo-idle"), 0.1f, true);
-            runAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/halo-walk"), 0.1f, true);
-            jumpAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/halo-jump"), 0.5f, false);
-            celebrateAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/halo-crouch"), 0.1f, false);
-            dieAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/halo-jump"), 0.1f, false);
+            idleAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-idle-final"), 0.3f, true, 64, 64);
+            runAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-walk-final"), 0.1f, true, 64, 64);
+            jumpAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-jump-final"), 0.5f, false, 64, 64);
+            celebrateAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-idle-final"), 0.1f, false, 64, 64);
+            dieAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-idle-final"), 0.1f, false, 165, 125);
 
             // Calculate bounds within texture size.            
             int width = (int)(idleAnimation.FrameWidth * 0.4);
             int left = (idleAnimation.FrameWidth - width) / 2;
-            int height = (int)(idleAnimation.FrameWidth * 0.8);
+            int height = (int)(idleAnimation.FrameHeight * 0.7);
             int top = idleAnimation.FrameHeight - height;
             localBounds = new Rectangle(left, top, width, height);
 
@@ -152,7 +141,7 @@ namespace Quisling
             //int left = (idleAnimation.FrameWidth - width) / 2;
             //int height = (int)(idleAnimation.FrameWidth * 0.8);
             //int top = idleAnimation.FrameHeight - height;
-            //localBounds = new Rectangle(0, 0, 88, 109);
+            //localBounds = new Rectangle(20, 63, 25, 38);
 
 
             // Load sounds.            
@@ -165,8 +154,7 @@ namespace Quisling
         /// Resets the player to life.
         /// </summary>
         /// <param name="position">The position to come to life at.</param>
-        public void Reset(Vector2 position)
-        {
+        public void Reset(Vector2 position) {
             Position = position;
             Velocity = Vector2.Zero;
             isAlive = true;
@@ -182,25 +170,20 @@ namespace Quisling
         /// we need to reverse our motion when the orientation is in the LandscapeRight orientation.
         /// </remarks>
         public void Update(
-            GameTime gameTime, 
-            KeyboardState keyboardState, 
-            GamePadState gamePadState, 
-            TouchCollection touchState, 
+            GameTime gameTime,
+            KeyboardState keyboardState,
+            GamePadState gamePadState,
+            TouchCollection touchState,
             AccelerometerState accelState,
-            DisplayOrientation orientation)
-        {
+            DisplayOrientation orientation) {
             GetInput(keyboardState, gamePadState, touchState, accelState, orientation);
 
             ApplyPhysics(gameTime);
 
-            if (IsAlive && IsOnGround)
-            {
-                if (Math.Abs(Velocity.X) - 0.02f > 0)
-                {
+            if (IsAlive && IsOnGround) {
+                if (Math.Abs(Velocity.X) - 0.02f > 0) {
                     sprite.PlayAnimation(runAnimation);
-                }
-                else
-                {
+                } else {
                     sprite.PlayAnimation(idleAnimation);
                 }
             }
@@ -214,12 +197,11 @@ namespace Quisling
         /// Gets player horizontal movement and jump commands from input.
         /// </summary>
         private void GetInput(
-            KeyboardState keyboardState, 
-            GamePadState gamePadState, 
+            KeyboardState keyboardState,
+            GamePadState gamePadState,
             TouchCollection touchState,
-            AccelerometerState accelState, 
-            DisplayOrientation orientation)
-        {
+            AccelerometerState accelState,
+            DisplayOrientation orientation) {
             // Get analog horizontal movement.
             movement = gamePadState.ThumbSticks.Left.X * MoveStickScale;
 
@@ -228,8 +210,7 @@ namespace Quisling
                 movement = 0.0f;
 
             // Move the player with accelerometer
-            if (Math.Abs(accelState.Acceleration.Y) > 0.10f)
-            {
+            if (Math.Abs(accelState.Acceleration.Y) > 0.10f) {
                 // set our movement speed
                 movement = MathHelper.Clamp(-accelState.Acceleration.Y * AccelerometerScale, -1f, 1f);
 
@@ -241,14 +222,11 @@ namespace Quisling
             // If any digital horizontal movement input is found, override the analog movement.
             if (gamePadState.IsButtonDown(Buttons.DPadLeft) ||
                 keyboardState.IsKeyDown(Keys.Left) ||
-                keyboardState.IsKeyDown(Keys.A))
-            {
+                keyboardState.IsKeyDown(Keys.A)) {
                 movement = -1.0f;
-            }
-            else if (gamePadState.IsButtonDown(Buttons.DPadRight) ||
-                     keyboardState.IsKeyDown(Keys.Right) ||
-                     keyboardState.IsKeyDown(Keys.D))
-            {
+            } else if (gamePadState.IsButtonDown(Buttons.DPadRight) ||
+                       keyboardState.IsKeyDown(Keys.Right) ||
+                       keyboardState.IsKeyDown(Keys.D)) {
                 movement = 1.0f;
             }
 
@@ -264,8 +242,7 @@ namespace Quisling
         /// <summary>
         /// Updates the player's velocity and position based on input, gravity, etc.
         /// </summary>
-        public void ApplyPhysics(GameTime gameTime)
-        {
+        public void ApplyPhysics(GameTime gameTime) {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
             Vector2 previousPosition = Position;
@@ -318,14 +295,11 @@ namespace Quisling
         /// A new Y velocity if beginning or continuing a jump.
         /// Otherwise, the existing Y velocity.
         /// </returns>
-        private float DoJump(float velocityY, GameTime gameTime)
-        {
+        private float DoJump(float velocityY, GameTime gameTime) {
             // If the player wants to jump
-            if (isJumping)
-            {
+            if (isJumping) {
                 // Begin or continue a jump
-                if ((!wasJumping && IsOnGround) || jumpTime > 0.0f)
-                {
+                if ((!wasJumping && IsOnGround) || jumpTime > 0.0f) {
                     if (jumpTime == 0.0f)
                         jumpSound.Play();
 
@@ -334,19 +308,14 @@ namespace Quisling
                 }
 
                 // If we are in the ascent of the jump
-                if (0.0f < jumpTime && jumpTime <= MaxJumpTime)
-                {
+                if (0.0f < jumpTime && jumpTime <= MaxJumpTime) {
                     // Fully override the vertical velocity with a power curve that gives players more control over the top of the jump
                     velocityY = JumpLaunchVelocity * (1.0f - (float)Math.Pow(jumpTime / MaxJumpTime, JumpControlPower));
-                }
-                else
-                {
+                } else {
                     // Reached the apex of the jump
                     jumpTime = 0.0f;
                 }
-            }
-            else
-            {
+            } else {
                 // Continues not jumping or cancels a jump in progress
                 jumpTime = 0.0f;
             }
@@ -361,8 +330,7 @@ namespace Quisling
         /// axis to prevent overlapping. There is some special logic for the Y axis to
         /// handle platforms which behave differently depending on direction of movement.
         /// </summary>
-        private void HandleCollisions()
-        {
+        private void HandleCollisions() {
             // Get the player's bounding rectangle and find neighboring tiles.
             Rectangle bounds = BoundingRectangle;
             int leftTile = (int)Math.Floor((float)bounds.Left / Tile.Width);
@@ -374,40 +342,33 @@ namespace Quisling
             isOnGround = false;
 
             // For each potentially colliding tile,
-            for (int y = topTile; y <= bottomTile; ++y)
-            {
-                for (int x = leftTile; x <= rightTile; ++x)
-                {
+            for (int y = topTile; y <= bottomTile; ++y) {
+                for (int x = leftTile; x <= rightTile; ++x) {
                     // If this tile is collidable,
                     TileCollision collision = Level.GetCollision(x, y);
-                    if (collision != TileCollision.Passable)
-                    {
+                    if (collision != TileCollision.Passable) {
                         // Determine collision depth (with direction) and magnitude.
                         Rectangle tileBounds = Level.GetBounds(x, y);
                         Vector2 depth = RectangleExtensions.GetIntersectionDepth(bounds, tileBounds);
-                        if (depth != Vector2.Zero)
-                        {
+                        if (depth != Vector2.Zero) {
                             float absDepthX = Math.Abs(depth.X);
                             float absDepthY = Math.Abs(depth.Y);
 
                             // Resolve the collision along the shallow axis.
-                            if (absDepthY < absDepthX || collision == TileCollision.Platform)
-                            {
+                            if (absDepthY < absDepthX || collision == TileCollision.Platform) {
                                 // If we crossed the top of a tile, we are on the ground.
                                 if (previousBottom <= tileBounds.Top)
                                     isOnGround = true;
 
                                 // Ignore platforms, unless we are on the ground.
-                                if (collision == TileCollision.Impassable || IsOnGround)
-                                {
+                                if (collision == TileCollision.Impassable || IsOnGround) {
                                     // Resolve the collision along the Y axis.
                                     Position = new Vector2(Position.X, Position.Y + depth.Y);
 
                                     // Perform further collisions with the new bounds.
                                     bounds = BoundingRectangle;
                                 }
-                            }
-                            else if (collision == TileCollision.Impassable) // Ignore platforms.
+                            } else if (collision == TileCollision.Impassable) // Ignore platforms.
                             {
                                 // Resolve the collision along the X axis.
                                 Position = new Vector2(Position.X + depth.X, Position.Y);
@@ -431,8 +392,7 @@ namespace Quisling
         /// The enemy who killed the player. This parameter is null if the player was
         /// not killed by an enemy (fell into a hole).
         /// </param>
-        public void OnKilled(Enemy killedBy)
-        {
+        public void OnKilled(Enemy killedBy) {
             isAlive = false;
 
             if (killedBy != null)
@@ -446,21 +406,21 @@ namespace Quisling
         /// <summary>
         /// Called when this player reaches the level's exit.
         /// </summary>
-        public void OnReachedExit()
-        {
+        public void OnReachedExit() {
             sprite.PlayAnimation(celebrateAnimation);
         }
 
         /// <summary>
         /// Draws the animated player.
         /// </summary>
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
             // Flip the sprite to face the way we are moving.
             if (Velocity.X > 0)
-                flip = SpriteEffects.FlipHorizontally;
-            else if (Velocity.X < 0)
+                //flip = SpriteEffects.FlipHorizontally;
                 flip = SpriteEffects.None;
+            else if (Velocity.X < 0)
+                //flip = SpriteEffects.None;
+                flip = SpriteEffects.FlipHorizontally;
 
             // Draw that sprite.
             sprite.Draw(gameTime, spriteBatch, Position, flip);

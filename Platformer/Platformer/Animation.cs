@@ -64,16 +64,19 @@ namespace Quisling
         public int FrameWidth
         {
             // Assume square frames.
-            get { return Texture.Height; }
+            get { return frameWidth;}
         }
-
+        int frameWidth = 0;
         /// <summary>
         /// Gets the height of a frame in the animation.
         /// </summary>
         public int FrameHeight
         {
-            get { return Texture.Height; }
+            get {
+                    return frameHeight;
+            }
         }
+        int frameHeight = 0;
 
         /// <summary>
         /// Constructors a new animation.
@@ -83,6 +86,14 @@ namespace Quisling
             this.texture = texture;
             this.frameTime = frameTime;
             this.isLooping = isLooping;
+        }
+
+        public Animation(Texture2D texture, float frameTime, bool isLooping, int frameWidth, int frameHeight) {
+            this.texture = texture;
+            this.frameTime = frameTime;
+            this.isLooping = isLooping;
+            this.frameWidth = frameWidth;
+            this.frameHeight = frameHeight;
         }
     }
 }
