@@ -92,7 +92,7 @@ namespace Quisling
             try
             {
                 MediaPlayer.IsRepeating = true;
-                MediaPlayer.Play(Content.Load<Song>("Sounds/Music"));
+                MediaPlayer.Play(Content.Load<Song>("Sounds/Background"));
             }
             catch { }
 
