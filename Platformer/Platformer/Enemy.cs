@@ -172,7 +172,7 @@ namespace Quisling
 
 
             // Draw facing the way the enemy is moving.
-            SpriteEffects flip = direction > 0 ? SpriteEffects.FlipHorizontally : SpriteEffects.None;
+            SpriteEffects flip = direction > 0 ? SpriteEffects.None : SpriteEffects.FlipHorizontally;
             sprite.Draw(gameTime, spriteBatch, Position, flip);
         }
     }

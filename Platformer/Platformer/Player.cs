@@ -59,7 +59,7 @@ namespace Quisling {
         Vector2 velocity;
 
         // Constants for controling horizontal movement
-        private const float MoveAcceleration = 7000.0f;
+        private const float MoveAcceleration = 9000.0f;
         private const float MaxMoveSpeed = 1750.0f;
         private const float GroundDragFactor = 0.48f;
         private const float AirDragFactor = 0.58f;
@@ -123,16 +123,16 @@ namespace Quisling {
         /// </summary>
         public void LoadContent() {
             // Load animated textures.
-            idleAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-idle"), 0.3f, true, 64, 64);
-            runAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-walk"), 0.1f, true, 64, 64);
-            jumpAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-jump"), 0.5f, false, 64, 64);
-            celebrateAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-idle"), 0.1f, false, 64, 64);
-            dieAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-die"), 0.1f, false, 64, 64);
+            idleAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-idle"), 0.3f, true, 95, 95);
+            runAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-walk"), 0.1f, true, 95, 95);
+            jumpAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-jump"), 0.5f, false, 95, 95);
+            celebrateAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-idle"), 0.1f, false, 95, 95);
+            dieAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-die"), 0.1f, false, 95, 95);
 
             // Calculate bounds within texture size.            
             int width = (int)(idleAnimation.FrameWidth * 0.4);
             int left = (idleAnimation.FrameWidth - width) / 2;
-            int height = (int)(idleAnimation.FrameHeight * 0.7);
+            int height = (int)(idleAnimation.FrameHeight * 0.65);
             int top = idleAnimation.FrameHeight - height;
             localBounds = new Rectangle(left, top, width, height);
 
