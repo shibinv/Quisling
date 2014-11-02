@@ -53,7 +53,7 @@ namespace Quisling
         // levels in our content are 0-based and that all numbers under this constant
         // have a level file present. This allows us to not need to check for the file
         // or handle exceptions, both of which can add unnecessary time to level loading.
-        private const int numberOfLevels = 6;
+        private const int numberOfLevels = 7;
 
         public QuislingGame()
         {
@@ -157,7 +157,7 @@ namespace Quisling
         {
             // move to the next level
             levelIndex = (levelIndex + 1) % numberOfLevels;
-            //levelIndex = 5;
+            //levelIndex = 6;
 
             // Unloads the content for the current level before loading the next one.
             if (level != null)
