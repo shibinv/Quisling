@@ -212,11 +212,11 @@ namespace Quisling
                 level.ReachedExit ||
                 (int)level.TimeRemaining.TotalSeconds % 2 == 0)
             {
-                timeColor = Color.Yellow;
+                timeColor = Color.Green;
             }
             else
             {
-                timeColor = Color.Red;
+                timeColor = Color.Maroon;
             }
             DrawShadowedString(hudFont, timeString, hudLocation, timeColor);
 

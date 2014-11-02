@@ -52,6 +52,10 @@ namespace Quisling
         private float cameraPositionXAxis;
         public float cameraPositionYAxis;
 
+        // count gems
+        public int TotalGems = 0;
+        public int CollectedGems = 0;
+
         public int Score
         {
             get { return score; }
@@ -305,7 +309,7 @@ namespace Quisling
         {
             Point position = GetBounds(x, y).Center;
             gems.Add(new Gem(this, new Vector2(position.X, position.Y)));
-
+            TotalGems++;
             return new Tile(null, TileCollision.Passable);
         }
 
@@ -436,6 +440,7 @@ namespace Quisling
                 {
                     gems.RemoveAt(i--);
                     OnGemCollected(gem, Player);
+                    CollectedGems++;
                 }
             }
         }
@@ -486,9 +491,13 @@ namespace Quisling
         /// </summary>
         private void OnExitReached()
         {
-            Player.OnReachedExit();
-            exitReachedSound.Play();
-            reachedExit = true;
+            if (TotalGems == CollectedGems) {
+                Player.OnReachedExit();
+                exitReachedSound.Play();
+                reachedExit = true;
+            } else {
+                OnPlayerKilled(null);
+            }
         }
 
         /// <summary>
