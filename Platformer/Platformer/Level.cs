@@ -101,7 +101,7 @@ namespace Quisling
 
             // Load background layer textures. For now, all levels must
             // use the same backgrounds and only use the left-most part of them.
-            layers = new Texture2D[3];
+            layers = new Texture2D[1]; //changed to 1 layer
             for (int i = 0; i < layers.Length; ++i)
             {
                 // Choose a random segment if each background layer for level variety.
@@ -193,7 +193,7 @@ namespace Quisling
 
                 // Floating platform
                 case '-':
-                    return LoadTile("Platform", TileCollision.Platform);
+                    return LoadTile("Glass", TileCollision.Platform);
 
                 // Various enemies
                 case 'A':
@@ -207,11 +207,11 @@ namespace Quisling
 
                 // Platform block
                 case '~':
-                    return LoadVarietyTile("BlockB", 2, TileCollision.Platform);
+                    return LoadVarietyTile("PassA", 2, TileCollision.Platform);
 
                 // Passable block
                 case ':':
-                    return LoadVarietyTile("BlockB", 2, TileCollision.Passable);
+                    return LoadVarietyTile("PassA", 2, TileCollision.Passable);
 
                 // Player 1 start point
                 case '1':
@@ -219,7 +219,7 @@ namespace Quisling
 
                 // Impassable block
                 case '#':
-                    return LoadVarietyTile("BlockA", 7, TileCollision.Impassable);
+                    return LoadVarietyTile("GroundA", 2, TileCollision.Impassable);
 
                 // Unknown tile type character
                 default:
@@ -509,8 +509,8 @@ namespace Quisling
         /// </summary>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            for (int i = 0; i <= EntityLayer; ++i)
-                spriteBatch.Draw(layers[i], Vector2.Zero, Color.White);
+            //for (int i = 0; i <= EntityLayer; ++i) // changed to 1 layer
+                spriteBatch.Draw(layers[0], Vector2.Zero, Color.White);
 
             DrawTiles(spriteBatch);
 
