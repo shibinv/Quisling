@@ -133,7 +133,7 @@ namespace Quisling {
             jumpAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-jump"), 0.5f, false, 95, 95);
             celebrateAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-idle"), 0.1f, false, 95, 95);
             dieAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-die"), 0.1f, false, 95, 95);
-            shootAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/StillFire"), 0.1f, true, 95, 95);
+            shootAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/IdleFire"), 0.1f, true, 96, 96);
             movingShootAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/WalkFire"), 0.1f, true, 95, 95);
             jumpingShootAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/JumpFire"), 0.1f, true, 95, 95);
 
@@ -197,6 +197,7 @@ namespace Quisling {
                     sprite.PlayAnimation(idleAnimation);
                 }
             }
+
 
             // Clear input.
             movement = 0.0f;
