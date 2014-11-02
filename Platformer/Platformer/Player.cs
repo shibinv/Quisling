@@ -25,6 +25,9 @@ namespace Quisling {
         private Animation jumpAnimation;
         private Animation celebrateAnimation;
         private Animation dieAnimation;
+        private Animation shootAnimation;
+        private Animation movingShootAnimation;
+        private Animation jumpingShootAnimation;
         private SpriteEffects flip = SpriteEffects.None;
         private AnimationPlayer sprite;
 
@@ -94,6 +97,8 @@ namespace Quisling {
         private bool wasJumping;
         private float jumpTime;
 
+        bool isShooting;
+
         private Rectangle localBounds;
         /// <summary>
         /// Gets a rectangle which bounds this player in world space.
@@ -128,6 +133,11 @@ namespace Quisling {
             jumpAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-jump"), 0.5f, false, 95, 95);
             celebrateAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-idle"), 0.1f, false, 95, 95);
             dieAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-die"), 0.1f, false, 95, 95);
+            shootAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/StillFire"), 0.1f, true, 95, 95);
+            movingShootAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/WalkFire"), 0.1f, true, 95, 95);
+            jumpingShootAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/JumpFire"), 0.1f, true, 95, 95);
+
+
 
             // Calculate bounds within texture size.            
             int width = (int)(idleAnimation.FrameWidth * 0.4);
@@ -237,7 +247,13 @@ namespace Quisling {
                 keyboardState.IsKeyDown(Keys.Up) ||
                 keyboardState.IsKeyDown(Keys.W) ||
                 touchState.AnyTouch();
+
+            //Check if player is shooting
+            isShooting =
+                   keyboardState.IsKeyDown(Keys.X);
         }
+
+
 
         /// <summary>
         /// Updates the player's velocity and position based on input, gravity, etc.
@@ -302,7 +318,7 @@ namespace Quisling {
                 if ((!wasJumping && IsOnGround) || jumpTime > 0.0f) {
                     if (jumpTime == 0.0f)
                         jumpSound.Play();
-
+                    
                     jumpTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
                     sprite.PlayAnimation(jumpAnimation);
                 }
@@ -408,6 +424,14 @@ namespace Quisling {
         /// </summary>
         public void OnReachedExit() {
             sprite.PlayAnimation(celebrateAnimation);
+        }
+
+        public void shootingAnimation()
+        {
+            if (isShooting && isOnGround)
+            {
+                sprite.PlayAnimation(shootAnimation);
+            }
         }
 
         /// <summary>
