@@ -49,7 +49,8 @@ namespace Quisling
 
         // Level game state.
         private Random random = new Random(354668); // Arbitrary, but constant seed
-        private float cameraPosition;
+        private float cameraPositionXAxis;
+        public float cameraPositionYAxis;
 
         public int Score
         {
@@ -508,11 +509,12 @@ namespace Quisling
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
             spriteBatch.Begin();
             //for (int i = 0; i <= EntityLayer; ++i)
-                layers[0].Draw(spriteBatch, cameraPosition);
+                layers[0].Draw(spriteBatch, cameraPositionXAxis);
             spriteBatch.End();
 
             ScrollCamera(spriteBatch.GraphicsDevice.Viewport);
-            Matrix cameraTransform = Matrix.CreateTranslation(-cameraPosition, 0.0f, 0.0f);
+            //Matrix cameraTransform = Matrix.CreateTranslation(-cameraPositionXAxis, 0.0f, 0.0f);
+            Matrix cameraTransform = Matrix.CreateTranslation(-cameraPositionXAxis, -cameraPositionYAxis, 0.0f);
             //spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None, cameraTransform);
             spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null,null,null,null,cameraTransform);
 
@@ -530,7 +532,7 @@ namespace Quisling
 
             spriteBatch.Begin();
             for (int i = EntityLayer + 1; i < layers.Length; ++i)
-                layers[i].Draw(spriteBatch, cameraPosition);
+                layers[i].Draw(spriteBatch, cameraPositionXAxis);
             spriteBatch.End();
         }
 
@@ -544,8 +546,14 @@ const float ViewMargin = 0.35f;
 
       // Calculate the edges of the screen.
       float marginWidth = viewport.Width * ViewMargin;
-      float marginLeft = cameraPosition + marginWidth;
-      float marginRight = cameraPosition + viewport.Width - marginWidth;
+      float marginLeft = cameraPositionXAxis + marginWidth;
+      float marginRight = cameraPositionXAxis + viewport.Width - marginWidth;
+      const float TopMargin = 0.3f;
+      const float BottomMargin = 0.1f;
+      float marginTop = cameraPositionYAxis + viewport.Height * TopMargin;
+      float marginBottom = cameraPositionYAxis + viewport.Height - viewport.Height * BottomMargin;
+
+      float maxCameraPositionYOffset = Tile.Height * Height - viewport.Height;
 
       // Calculate how far to scroll when the player is near the edges of the screen.
       float cameraMovement = 0.0f;
@@ -554,10 +562,21 @@ const float ViewMargin = 0.35f;
       else if (Player.Position.X > marginRight)
         cameraMovement = Player.Position.X - marginRight;
 
+      // Calculate how far to vertically scroll when the player is near the top or bottom of the screen.  
+      float cameraMovementY = 0.0f;
+      if (Player.Position.Y < marginTop) //above the top margin  
+          cameraMovementY = Player.Position.Y - marginTop;
+      else if (Player.Position.Y > marginBottom) //below the bottom margin  
+          cameraMovementY = Player.Position.Y - marginBottom;  
+
+
       // Update the camera position, but prevent scrolling off the ends of the level.
       float maxCameraPosition = Tile.Width * Width - viewport.Width;
-      cameraPosition = MathHelper.Clamp(cameraPosition + cameraMovement, 0.0f, maxCameraPosition);
-    }
+      cameraPositionXAxis = MathHelper.Clamp(cameraPositionXAxis + cameraMovement, 0.0f, maxCameraPosition);
+
+      cameraPositionYAxis = MathHelper.Clamp(cameraPositionYAxis + cameraMovementY, 0.0f, maxCameraPositionYOffset); 
+
+        }
 
         /// <summary>
         /// Draws each tile in the level.
@@ -565,7 +584,7 @@ const float ViewMargin = 0.35f;
         private void DrawTiles(SpriteBatch spriteBatch)
         {
             // Calculate the visible range of tiles.
-            int left = (int)Math.Floor(cameraPosition / Tile.Width);
+            int left = (int)Math.Floor(cameraPositionXAxis / Tile.Width);
             int right = left + spriteBatch.GraphicsDevice.Viewport.Width / Tile.Width;
             right = Math.Min(right, Width - 1);
 
