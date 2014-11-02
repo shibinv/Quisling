@@ -74,8 +74,8 @@ namespace Quisling
         /// </summary>
         public void LoadContent()
         {
-            texture = Level.Content.Load<Texture2D>("Sprites/Gem");
-            origin = new Vector2(texture.Width / 2.0f, texture.Height / 2.0f);
+            texture = Level.Content.Load<Texture2D>("Sprites/Capsule");
+            origin = new Vector2(texture.Width / 1.0f, texture.Height / 1.0f);
             collectedSound = Level.Content.Load<SoundEffect>("Sounds/GemCollected");
         }
 
