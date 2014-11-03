@@ -41,22 +41,22 @@
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Sprites\MonsterB\Idle.png">
+    <Compile Include="Sprites\ZombieB\Idle.png">
       <Name>Idle</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Sprites\MonsterB\Run.png">
+    <Compile Include="Sprites\ZombieB\Run.png">
       <Name>Run</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Sprites\MonsterD\Idle.png">
+    <Compile Include="Sprites\ZombieD\Idle.png">
       <Name>Idle</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Sprites\MonsterD\Run.png">
+    <Compile Include="Sprites\ZombieD\Run.png">
       <Name>Run</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -209,19 +209,19 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sprites\MonsterA\Idle.png">
+    <Compile Include="Sprites\ZombieA\Idle.png">
       <Name>Idle</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sprites\MonsterC\Idle.png">
+    <Compile Include="Sprites\ZombieC\Idle.png">
       <Name>Idle</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>
-    <Compile Include="Sprites\MonsterC\Run.png">
+    <Compile Include="Sprites\ZombieC\Run.png">
       <Name>Run</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -268,7 +268,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sprites\MonsterA\Run.png">
+    <Compile Include="Sprites\ZombieA\Run.png">
       <Name>Run</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
@@ -391,6 +391,13 @@
   <ItemGroup>
     <Compile Include="Sprites\Capsule.png">
       <Name>Capsule</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Tiles\Ladder.png">
+      <Name>Ladder</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

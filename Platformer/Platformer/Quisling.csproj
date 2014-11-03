@@ -74,10 +74,10 @@
     <Compile Include="AnimationPlayer.cs" />
     <Compile Include="Circle.cs" />
     <Compile Include="Enemy.cs" />
-    <Compile Include="Gem.cs" />
+    <Compile Include="Item.cs" />
     <Compile Include="Layer.cs" />
     <Compile Include="Level.cs" />
-    <Compile Include="PlatformerGame.cs" />
+    <Compile Include="QuislingGame.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Projectile.cs" />

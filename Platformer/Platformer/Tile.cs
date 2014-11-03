@@ -35,6 +35,11 @@ namespace Quisling
         /// past it to the left and right, but can not fall down through the top of it.
         /// </summary>
         Platform = 2,
+
+        /// <summary>
+        /// A ladder acts as a ladder should...
+        /// </summary>
+        Ladder = 3,
     }
 
     /// <summary>
@@ -47,6 +52,7 @@ namespace Quisling
 
         public const int Width = 40;
         public const int Height = 32;
+        public const int Center = Width / 2;
 
         public static readonly Vector2 Size = new Vector2(Width, Height);
 

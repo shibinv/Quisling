@@ -17,7 +17,7 @@ namespace Quisling
     /// <summary>
     /// A valuable item the player can collect.
     /// </summary>
-    class Gem
+    class Item
     {
         private Texture2D texture;
         private Vector2 origin;
@@ -61,7 +61,7 @@ namespace Quisling
         /// <summary>
         /// Constructs a new gem.
         /// </summary>
-        public Gem(Level level, Vector2 position)
+        public Item(Level level, Vector2 position)
         {
             this.level = level;
             this.basePosition = position;

@@ -39,7 +39,7 @@ namespace Quisling
         }
         Player player;
 
-        private List<Gem> gems = new List<Gem>();
+        private List<Item> gems = new List<Item>();
         private List<Enemy> enemies = new List<Enemy>();
 
         // Key locations in the level.        
@@ -200,13 +200,13 @@ namespace Quisling
 
                 // Various enemies
                 case 'A':
-                    return LoadEnemyTile(x, y, "MonsterA");
+                    return LoadEnemyTile(x, y, "ZombieA");
                 case 'B':
-                    return LoadEnemyTile(x, y, "MonsterB");
+                    return LoadEnemyTile(x, y, "ZombieB");
                 case 'C':
-                    return LoadEnemyTile(x, y, "MonsterC");
+                    return LoadEnemyTile(x, y, "ZombieC");
                 case 'D':
-                    return LoadEnemyTile(x, y, "MonsterD");
+                    return LoadEnemyTile(x, y, "ZombieD");
 
                 // Platform block
                 case '~':
@@ -223,6 +223,10 @@ namespace Quisling
                 // Impassable block
                 case '#':
                     return LoadVarietyTile("GroundA", 2, TileCollision.Impassable);
+
+                // Ladder
+                case 'H':
+                    return LoadTile("Ladder", TileCollision.Ladder);
 
                 // Unknown tile type character
                 default:
@@ -308,7 +312,7 @@ namespace Quisling
         private Tile LoadGemTile(int x, int y)
         {
             Point position = GetBounds(x, y).Center;
-            gems.Add(new Gem(this, new Vector2(position.X, position.Y)));
+            gems.Add(new Item(this, new Vector2(position.X, position.Y)));
             TotalGems++;
             return new Tile(null, TileCollision.Passable);
         }
@@ -342,6 +346,35 @@ namespace Quisling
 
             return tiles[x, y].Collision;
         }
+
+                public TileCollision GetTileCollisionBehindPlayer(Vector2 playerPosition)
+                {
+                    int x = (int)playerPosition.X / Tile.Width;
+                    int y = (int)(playerPosition.Y - 1) / Tile.Height;
+ 
+                    // Prevent escaping past the level ends.
+                    if (x == Width)
+                        return TileCollision.Impassable;
+                    // Allow jumping past the level top and falling through the bottom.
+                    if (y == Height)
+                        return TileCollision.Passable;
+ 
+                    return tiles[x, y].Collision;
+                }
+ 
+                public TileCollision GetTileCollisionBelowPlayer(Vector2 playerPosition)
+                {
+                    int x = (int)playerPosition.X / Tile.Width;
+                    int y = (int)(playerPosition.Y) / Tile.Height;
+
+                    if (x < 0 || x >= Width)
+                        return TileCollision.Impassable;
+                    // Allow jumping past the level top and falling through the bottom.
+                    if (y < 0 || y >= Height)
+                        return TileCollision.Passable;
+
+                    return tiles[x, y].Collision;
+                }
 
         /// <summary>
         /// Gets the bounding rectangle of a tile in world space.
@@ -400,7 +433,7 @@ namespace Quisling
             else
             {
                 timeRemaining -= gameTime.ElapsedGameTime;
-                Player.Update(gameTime, keyboardState, gamePadState, touchState, accelState, orientation);
+                Player.Update(gameTime);
                 UpdateGems(gameTime);
 
                 // Falling off the bottom of the level kills the player.
@@ -432,7 +465,7 @@ namespace Quisling
         {
             for (int i = 0; i < gems.Count; ++i)
             {
-                Gem gem = gems[i];
+                Item gem = gems[i];
 
                 gem.Update(gameTime);
 
@@ -467,9 +500,9 @@ namespace Quisling
         /// </summary>
         /// <param name="gem">The gem that was collected.</param>
         /// <param name="collectedBy">The player who collected this gem.</param>
-        private void OnGemCollected(Gem gem, Player collectedBy)
+        private void OnGemCollected(Item gem, Player collectedBy)
         {
-            score += Gem.PointValue;
+            score += Item.PointValue;
 
             gem.OnCollected(collectedBy);
         }
@@ -529,7 +562,7 @@ namespace Quisling
 
             DrawTiles(spriteBatch);
 
-            foreach (Gem gem in gems)
+            foreach (Item gem in gems)
                 gem.Draw(gameTime, spriteBatch);
 
             Player.Draw(gameTime, spriteBatch);

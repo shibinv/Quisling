@@ -127,7 +127,7 @@ namespace Quisling
             // Exit the game when back is pressed.
             if (gamePadState.Buttons.Back == ButtonState.Pressed)
                 Exit();
-
+            
             bool continuePressed =
                 keyboardState.IsKeyDown(Keys.Space) ||
                 gamePadState.IsButtonDown(Buttons.A) ||
@@ -157,7 +157,7 @@ namespace Quisling
         {
             // move to the next level
             levelIndex = (levelIndex + 1) % numberOfLevels;
-            //levelIndex = 6;
+           //levelIndex = 5;
 
             // Unloads the content for the current level before loading the next one.
             if (level != null)
