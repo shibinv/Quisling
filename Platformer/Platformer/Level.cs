@@ -20,7 +20,7 @@ using Microsoft.Xna.Framework.Input;
 namespace Quisling
 {
     /// <summary>
-    /// A uniform grid of tiles with collections of gems and enemies.
+    /// A uniform grid of tiles with collections of items and enemies.
     /// The level owns the player and controls the game's win and lose
     /// conditions as well as scoring.
     /// </summary>
@@ -39,7 +39,7 @@ namespace Quisling
         }
         Player player;
 
-        private List<Item> gems = new List<Item>();
+        private List<Item> items = new List<Item>();
         private List<Enemy> enemies = new List<Enemy>();
 
         // Key locations in the level.        
@@ -52,9 +52,9 @@ namespace Quisling
         private float cameraPositionXAxis;
         public float cameraPositionYAxis;
 
-        // count gems
-        public int TotalGems = 0;
-        public int CollectedGems = 0;
+        // count items
+        public int TotalItems = 0;
+        public int CollectedItems = 0;
 
         public int Score
         {
@@ -190,9 +190,9 @@ namespace Quisling
                 case 'X':
                     return LoadExitTile(x, y);
 
-                // Gem
+                // Item
                 case 'G':
-                    return LoadGemTile(x, y);
+                    return LoadItemTile(x, y);
 
                 // Floating platform
                 case '-':
@@ -307,13 +307,13 @@ namespace Quisling
         }
 
         /// <summary>
-        /// Instantiates a gem and puts it in the level.
+        /// Instantiates a item and puts it in the level.
         /// </summary>
-        private Tile LoadGemTile(int x, int y)
+        private Tile LoadItemTile(int x, int y)
         {
             Point position = GetBounds(x, y).Center;
-            gems.Add(new Item(this, new Vector2(position.X, position.Y)));
-            TotalGems++;
+            items.Add(new Item(this, new Vector2(position.X, position.Y)));
+            TotalItems++;
             return new Tile(null, TileCollision.Passable);
         }
 
@@ -434,7 +434,7 @@ namespace Quisling
             {
                 timeRemaining -= gameTime.ElapsedGameTime;
                 Player.Update(gameTime);
-                UpdateGems(gameTime);
+                UpdateItems(gameTime);
 
                 // Falling off the bottom of the level kills the player.
                 if (Player.BoundingRectangle.Top >= Height * Tile.Height)
@@ -444,7 +444,7 @@ namespace Quisling
 
                 // The player has reached the exit if they are standing on the ground and
                 // his bounding rectangle contains the center of the exit tile. They can only
-                // exit when they have collected all of the gems.
+                // exit when they have collected all of the items.
                 if (Player.IsAlive &&
                     Player.IsOnGround &&
                     Player.BoundingRectangle.Contains(exit))
@@ -459,21 +459,21 @@ namespace Quisling
         }
 
         /// <summary>
-        /// Animates each gem and checks to allows the player to collect them.
+        /// Animates each item and checks to allows the player to collect them.
         /// </summary>
-        private void UpdateGems(GameTime gameTime)
+        private void UpdateItems(GameTime gameTime)
         {
-            for (int i = 0; i < gems.Count; ++i)
+            for (int i = 0; i < items.Count; ++i)
             {
-                Item gem = gems[i];
+                Item item = items[i];
 
-                gem.Update(gameTime);
+                item.Update(gameTime);
 
-                if (gem.BoundingCircle.Intersects(Player.BoundingRectangle))
+                if (item.BoundingCircle.Intersects(Player.BoundingRectangle))
                 {
-                    gems.RemoveAt(i--);
-                    OnGemCollected(gem, Player);
-                    CollectedGems++;
+                    items.RemoveAt(i--);
+                    OnItemCollected(item, Player);
+                    CollectedItems++;
                 }
             }
         }
@@ -496,15 +496,15 @@ namespace Quisling
         }
 
         /// <summary>
-        /// Called when a gem is collected.
+        /// Called when a item is collected.
         /// </summary>
-        /// <param name="gem">The gem that was collected.</param>
-        /// <param name="collectedBy">The player who collected this gem.</param>
-        private void OnGemCollected(Item gem, Player collectedBy)
+        /// <param name="item">The item that was collected.</param>
+        /// <param name="collectedBy">The player who collected this item.</param>
+        private void OnItemCollected(Item item, Player collectedBy)
         {
             score += Item.PointValue;
 
-            gem.OnCollected(collectedBy);
+            item.OnCollected(collectedBy);
         }
 
         /// <summary>
@@ -524,7 +524,7 @@ namespace Quisling
         /// </summary>
         private void OnExitReached()
         {
-            if (TotalGems == CollectedGems) {
+            if (TotalItems == CollectedItems) {
                 Player.OnReachedExit();
                 exitReachedSound.Play();
                 reachedExit = true;
@@ -562,8 +562,8 @@ namespace Quisling
 
             DrawTiles(spriteBatch);
 
-            foreach (Item gem in gems)
-                gem.Draw(gameTime, spriteBatch);
+            foreach (Item item in items)
+                item.Draw(gameTime, spriteBatch);
 
             Player.Draw(gameTime, spriteBatch);
 

@@ -157,7 +157,7 @@ namespace Quisling
         {
             // move to the next level
             levelIndex = (levelIndex + 1) % numberOfLevels;
-           //levelIndex = 5;
+           //levelIndex = 2;
 
             // Unloads the content for the current level before loading the next one.
             if (level != null)
@@ -222,8 +222,9 @@ namespace Quisling
 
             // Draw score
             float timeHeight = hudFont.MeasureString(timeString).Y;
-            DrawShadowedString(hudFont, "SCORE: " + level.Score.ToString(), hudLocation + new Vector2(0.0f, timeHeight * 1.2f), Color.Yellow);
-           
+            //DrawShadowedString(hudFont, "ITEMS LEFT: " + level.Score.ToString(), hudLocation + new Vector2(0.0f, timeHeight * 1.2f), Color.DarkMagenta);
+            DrawShadowedString(hudFont, "ITEMS LEFT: " + level.CollectedItems.ToString() + "/" + level.TotalItems.ToString(), hudLocation + new Vector2(0.0f, timeHeight * 1.2f), Color.DarkSalmon);
+            
             // Determine the status overlay message to show.
             Texture2D status = null;
             if (level.TimeRemaining == TimeSpan.Zero)

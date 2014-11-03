@@ -1,6 +1,6 @@
 ﻿#region File Description
 //-----------------------------------------------------------------------------
-// Gem.cs
+// Item.cs
 //
 // Microsoft XNA Community Game Platform
 // Copyright (C) Microsoft Corporation. All rights reserved.
@@ -15,7 +15,7 @@ using Microsoft.Xna.Framework.Audio;
 namespace Quisling
 {
     /// <summary>
-    /// A valuable item the player can collect.
+    /// A valuable Item the player can collect.
     /// </summary>
     class Item
     {
@@ -26,7 +26,7 @@ namespace Quisling
         public const int PointValue = 30;
         public readonly Color Color = Color.Yellow;
 
-        // The gem is animated from a base position along the Y axis.
+        // The Item is animated from a base position along the Y axis.
         private Vector2 basePosition;
         private float bounce;
 
@@ -37,7 +37,7 @@ namespace Quisling
         Level level;
 
         /// <summary>
-        /// Gets the current position of this gem in world space.
+        /// Gets the current position of this Item in world space.
         /// </summary>
         public Vector2 Position
         {
@@ -48,7 +48,7 @@ namespace Quisling
         }
 
         /// <summary>
-        /// Gets a circle which bounds this gem in world space.
+        /// Gets a circle which bounds this Item in world space.
         /// </summary>
         public Circle BoundingCircle
         {
@@ -59,7 +59,7 @@ namespace Quisling
         }
 
         /// <summary>
-        /// Constructs a new gem.
+        /// Constructs a new Item.
         /// </summary>
         public Item(Level level, Vector2 position)
         {
@@ -70,13 +70,13 @@ namespace Quisling
         }
 
         /// <summary>
-        /// Loads the gem texture and collected sound.
+        /// Loads the Item texture and collected sound.
         /// </summary>
         public void LoadContent()
         {
             texture = Level.Content.Load<Texture2D>("Sprites/Capsule");
             origin = new Vector2(texture.Width / 1.0f, texture.Height / 1.0f);
-            collectedSound = Level.Content.Load<SoundEffect>("Sounds/GemCollected");
+            collectedSound = Level.Content.Load<SoundEffect>("Sounds/ItemCollected");
         }
 
         /// <summary>
@@ -90,17 +90,17 @@ namespace Quisling
             const float BounceSync = -0.75f;
 
             // Bounce along a sine curve over time.
-            // Include the X coordinate so that neighboring gems bounce in a nice wave pattern.            
+            // Include the X coordinate so that neighboring Items bounce in a nice wave pattern.            
             double t = gameTime.TotalGameTime.TotalSeconds * BounceRate + Position.X * BounceSync;
             bounce = (float)Math.Sin(t) * BounceHeight * texture.Height;
         }
 
         /// <summary>
-        /// Called when this gem has been collected by a player and removed from the level.
+        /// Called when this Item has been collected by a player and removed from the level.
         /// </summary>
         /// <param name="collectedBy">
-        /// The player who collected this gem. Although currently not used, this parameter would be
-        /// useful for creating special powerup gems. For example, a gem could make the player invincible.
+        /// The player who collected this Item. Although currently not used, this parameter would be
+        /// useful for creating special powerup Items. For example, a Item could make the player invincible.
         /// </param>
         public void OnCollected(Player collectedBy)
         {
@@ -108,7 +108,7 @@ namespace Quisling
         }
 
         /// <summary>
-        /// Draws a gem in the appropriate color.
+        /// Draws a Item in the appropriate color.
         /// </summary>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
