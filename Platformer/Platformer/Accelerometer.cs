@@ -13,14 +13,12 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 #endregion
 
-namespace Quisling
-{
+namespace Quisling {
     /// <summary>
     /// A static encapsulation of accelerometer input to provide games with a polling-based
     /// accelerometer system.
     /// </summary>
-    public static class Accelerometer
-    {
+    public static class Accelerometer {
 #if WINDOWS_PHONE
         // the accelerometer sensor on the device
         private static Microsoft.Devices.Sensors.Accelerometer accelerometer = new Microsoft.Devices.Sensors.Accelerometer();
@@ -42,11 +40,9 @@ namespace Quisling
         /// <summary>
         /// Initializes the Accelerometer for the current game. This method can only be called once per game.
         /// </summary>
-        public static void Initialize()
-        {
+        public static void Initialize() {
             // make sure we don't initialize the Accelerometer twice
-            if (isInitialized)
-            {
+            if (isInitialized) {
                 throw new InvalidOperationException("Initialize can only be called once");
             }
 
@@ -76,7 +72,7 @@ namespace Quisling
             // remember that we are initialized
             isInitialized = true;
         }
-        
+
 #if WINDOWS_PHONE
         private static void sensor_ReadingChanged(object sender, Microsoft.Devices.Sensors.AccelerometerReadingEventArgs e)
         {
@@ -92,11 +88,9 @@ namespace Quisling
         /// Gets the current state of the accelerometer.
         /// </summary>
         /// <returns>A new AccelerometerState with the current state of the accelerometer.</returns>
-        public static AccelerometerState GetState()
-        {
+        public static AccelerometerState GetState() {
             // make sure we've initialized the Accelerometer before we try to get the state
-            if (!isInitialized)
-            {
+            if (!isInitialized) {
                 throw new InvalidOperationException("You must Initialize before you can call GetState");
             }
 
@@ -144,8 +138,7 @@ namespace Quisling
     /// <summary>
     /// An encapsulation of the accelerometer's current state.
     /// </summary>
-    public struct AccelerometerState
-    {
+    public struct AccelerometerState {
         /// <summary>
         /// Gets the accelerometer's current value in G-force.
         /// </summary>
@@ -162,8 +155,7 @@ namespace Quisling
         /// <param name="acceleration">The current acceleration (in G-force) of the accelerometer.</param>
         /// <param name="isActive">Whether or not the accelerometer is active.</param>
         public AccelerometerState(Vector3 acceleration, bool isActive)
-            : this()
-        {
+            : this() {
             Acceleration = acceleration;
             IsActive = isActive;
         }
@@ -172,8 +164,7 @@ namespace Quisling
         /// Returns a string containing the values of the Acceleration and IsActive properties.
         /// </summary>
         /// <returns>A new string describing the state.</returns>
-        public override string ToString()
-        {
+        public override string ToString() {
             return string.Format("Acceleration: {0}, IsActive: {1}", Acceleration, IsActive);
         }
     }

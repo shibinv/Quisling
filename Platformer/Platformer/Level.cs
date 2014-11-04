@@ -17,15 +17,13 @@ using System.IO;
 using Microsoft.Xna.Framework.Input.Touch;
 using Microsoft.Xna.Framework.Input;
 
-namespace Quisling
-{
+namespace Quisling {
     /// <summary>
     /// A uniform grid of tiles with collections of items and enemies.
     /// The level owns the player and controls the game's win and lose
     /// conditions as well as scoring.
     /// </summary>
-    class Level : IDisposable
-    {
+    class Level : IDisposable {
         // Physical structure of the level.
         private Tile[,] tiles;
         private Layer[] layers;
@@ -33,8 +31,7 @@ namespace Quisling
         private const int EntityLayer = 2;
 
         // Entities in the level.
-        public Player Player
-        {
+        public Player Player {
             get { return player; }
         }
         Player player;
@@ -56,20 +53,17 @@ namespace Quisling
         public int TotalItems = 0;
         public int CollectedItems = 0;
 
-        public int Score
-        {
+        public int Score {
             get { return score; }
         }
         int score;
 
-        public bool ReachedExit
-        {
+        public bool ReachedExit {
             get { return reachedExit; }
         }
         bool reachedExit;
 
-        public TimeSpan TimeRemaining
-        {
+        public TimeSpan TimeRemaining {
             get { return timeRemaining; }
         }
         TimeSpan timeRemaining;
@@ -77,8 +71,7 @@ namespace Quisling
         private const int PointsPerSecond = 5;
 
         // Level content.        
-        public ContentManager Content
-        {
+        public ContentManager Content {
             get { return content; }
         }
         ContentManager content;
@@ -96,8 +89,7 @@ namespace Quisling
         /// <param name="fileStream">
         /// A stream containing the tile data.
         /// </param>
-        public Level(IServiceProvider serviceProvider, Stream fileStream, int levelIndex)
-        {
+        public Level(IServiceProvider serviceProvider, Stream fileStream, int levelIndex) {
             // Create a new content manager to load content used just by this level.
             content = new ContentManager(serviceProvider, "Content");
 
@@ -124,17 +116,14 @@ namespace Quisling
         /// <param name="fileStream">
         /// A stream containing the tile data.
         /// </param>
-        private void LoadTiles(Stream fileStream)
-        {
+        private void LoadTiles(Stream fileStream) {
             // Load the level and ensure all of the lines are the same length.
             int width;
             List<string> lines = new List<string>();
-            using (StreamReader reader = new StreamReader(fileStream))
-            {
+            using (StreamReader reader = new StreamReader(fileStream)) {
                 string line = reader.ReadLine();
                 width = line.Length;
-                while (line != null)
-                {
+                while (line != null) {
                     lines.Add(line);
                     if (line.Length != width)
                         throw new Exception(String.Format("The length of line {0} is different from all preceeding lines.", lines.Count));
@@ -146,10 +135,8 @@ namespace Quisling
             tiles = new Tile[width, lines.Count];
 
             // Loop over every tile position,
-            for (int y = 0; y < Height; ++y)
-            {
-                for (int x = 0; x < Width; ++x)
-                {
+            for (int y = 0; y < Height; ++y) {
+                for (int x = 0; x < Width; ++x) {
                     // to load each tile.
                     char tileType = lines[y][x];
                     tiles[x, y] = LoadTile(tileType, x, y);
@@ -178,10 +165,8 @@ namespace Quisling
         /// The Y location of this tile in tile space.
         /// </param>
         /// <returns>The loaded tile.</returns>
-        private Tile LoadTile(char tileType, int x, int y)
-        {
-            switch (tileType)
-            {
+        private Tile LoadTile(char tileType, int x, int y) {
+            switch (tileType) {
                 // Blank space
                 case '.':
                     return new Tile(null, TileCollision.Passable);
@@ -245,8 +230,7 @@ namespace Quisling
         /// The tile collision type for the new tile.
         /// </param>
         /// <returns>The new tile.</returns>
-        private Tile LoadTile(string name, TileCollision collision)
-        {
+        private Tile LoadTile(string name, TileCollision collision) {
             return new Tile(Content.Load<Texture2D>("Tiles/" + name), collision);
         }
 
@@ -261,8 +245,7 @@ namespace Quisling
         /// <param name="variationCount">
         /// The number of variations in this group.
         /// </param>
-        private Tile LoadVarietyTile(string baseName, int variationCount, TileCollision collision)
-        {
+        private Tile LoadVarietyTile(string baseName, int variationCount, TileCollision collision) {
             int index = random.Next(variationCount);
             return LoadTile(baseName + index, collision);
         }
@@ -271,8 +254,7 @@ namespace Quisling
         /// <summary>
         /// Instantiates a player, puts him in the level, and remembers where to put him when he is resurrected.
         /// </summary>
-        private Tile LoadStartTile(int x, int y)
-        {
+        private Tile LoadStartTile(int x, int y) {
             if (Player != null)
                 throw new NotSupportedException("A level may only have one starting point.");
 
@@ -285,8 +267,7 @@ namespace Quisling
         /// <summary>
         /// Remembers the location of the level's exit.
         /// </summary>
-        private Tile LoadExitTile(int x, int y)
-        {
+        private Tile LoadExitTile(int x, int y) {
             if (exit != InvalidPosition)
                 throw new NotSupportedException("A level may only have one exit.");
 
@@ -298,8 +279,7 @@ namespace Quisling
         /// <summary>
         /// Instantiates an enemy and puts him in the level.
         /// </summary>
-        private Tile LoadEnemyTile(int x, int y, string spriteSet)
-        {
+        private Tile LoadEnemyTile(int x, int y, string spriteSet) {
             Vector2 position = RectangleExtensions.GetBottomCenter(GetBounds(x, y));
             enemies.Add(new Enemy(this, position, spriteSet));
 
@@ -309,8 +289,7 @@ namespace Quisling
         /// <summary>
         /// Instantiates a item and puts it in the level.
         /// </summary>
-        private Tile LoadItemTile(int x, int y)
-        {
+        private Tile LoadItemTile(int x, int y) {
             Point position = GetBounds(x, y).Center;
             items.Add(new Item(this, new Vector2(position.X, position.Y)));
             TotalItems++;
@@ -320,8 +299,7 @@ namespace Quisling
         /// <summary>
         /// Unloads the level content.
         /// </summary>
-        public void Dispose()
-        {
+        public void Dispose() {
             Content.Unload();
         }
 
@@ -335,8 +313,7 @@ namespace Quisling
         /// impossible to escape past the left or right edges, but allowing things
         /// to jump beyond the top of the level and fall off the bottom.
         /// </summary>
-        public TileCollision GetCollision(int x, int y)
-        {
+        public TileCollision GetCollision(int x, int y) {
             // Prevent escaping past the level ends.
             if (x < 0 || x >= Width)
                 return TileCollision.Impassable;
@@ -347,56 +324,51 @@ namespace Quisling
             return tiles[x, y].Collision;
         }
 
-                public TileCollision GetTileCollisionBehindPlayer(Vector2 playerPosition)
-                {
-                    int x = (int)playerPosition.X / Tile.Width;
-                    int y = (int)(playerPosition.Y - 1) / Tile.Height;
- 
-                    // Prevent escaping past the level ends.
-                    if (x == Width)
-                        return TileCollision.Impassable;
-                    // Allow jumping past the level top and falling through the bottom.
-                    if (y == Height)
-                        return TileCollision.Passable;
- 
-                    return tiles[x, y].Collision;
-                }
- 
-                public TileCollision GetTileCollisionBelowPlayer(Vector2 playerPosition)
-                {
-                    int x = (int)playerPosition.X / Tile.Width;
-                    int y = (int)(playerPosition.Y) / Tile.Height;
+        public TileCollision GetTileCollisionBehindPlayer(Vector2 playerPosition) {
+            int x = (int)playerPosition.X / Tile.Width;
+            int y = (int)(playerPosition.Y - 1) / Tile.Height;
 
-                    if (x < 0 || x >= Width)
-                        return TileCollision.Impassable;
-                    // Allow jumping past the level top and falling through the bottom.
-                    if (y < 0 || y >= Height)
-                        return TileCollision.Passable;
+            // Prevent escaping past the level ends.
+            if (x == Width)
+                return TileCollision.Impassable;
+            // Allow jumping past the level top and falling through the bottom.
+            if (y == Height)
+                return TileCollision.Passable;
 
-                    return tiles[x, y].Collision;
-                }
+            return tiles[x, y].Collision;
+        }
+
+        public TileCollision GetTileCollisionBelowPlayer(Vector2 playerPosition) {
+            int x = (int)playerPosition.X / Tile.Width;
+            int y = (int)(playerPosition.Y) / Tile.Height;
+
+            if (x < 0 || x >= Width)
+                return TileCollision.Impassable;
+            // Allow jumping past the level top and falling through the bottom.
+            if (y < 0 || y >= Height)
+                return TileCollision.Passable;
+
+            return tiles[x, y].Collision;
+        }
 
         /// <summary>
         /// Gets the bounding rectangle of a tile in world space.
         /// </summary>        
-        public Rectangle GetBounds(int x, int y)
-        {
+        public Rectangle GetBounds(int x, int y) {
             return new Rectangle(x * Tile.Width, y * Tile.Height, Tile.Width, Tile.Height);
         }
 
         /// <summary>
         /// Width of level measured in tiles.
         /// </summary>
-        public int Width
-        {
+        public int Width {
             get { return tiles.GetLength(0); }
         }
 
         /// <summary>
         /// Height of the level measured in tiles.
         /// </summary>
-        public int Height
-        {
+        public int Height {
             get { return tiles.GetLength(1); }
         }
 
@@ -409,29 +381,23 @@ namespace Quisling
         /// and handles the time limit with scoring.
         /// </summary>
         public void Update(
-            GameTime gameTime, 
-            KeyboardState keyboardState, 
-            GamePadState gamePadState, 
-            TouchCollection touchState, 
+            GameTime gameTime,
+            KeyboardState keyboardState,
+            GamePadState gamePadState,
+            TouchCollection touchState,
             AccelerometerState accelState,
-            DisplayOrientation orientation)
-        {
+            DisplayOrientation orientation) {
             // Pause while the player is dead or time is expired.
-            if (!Player.IsAlive || TimeRemaining == TimeSpan.Zero)
-            {
+            if (!Player.IsAlive || TimeRemaining == TimeSpan.Zero) {
                 // Still want to perform physics on the player.
                 Player.ApplyPhysics(gameTime);
-            }
-            else if (ReachedExit)
-            {
+            } else if (ReachedExit) {
                 // Animate the time being converted into points.
                 int seconds = (int)Math.Round(gameTime.ElapsedGameTime.TotalSeconds * 100.0f);
                 seconds = Math.Min(seconds, (int)Math.Ceiling(TimeRemaining.TotalSeconds));
                 timeRemaining -= TimeSpan.FromSeconds(seconds);
                 score += seconds * PointsPerSecond;
-            }
-            else
-            {
+            } else {
                 timeRemaining -= gameTime.ElapsedGameTime;
                 Player.Update(gameTime);
                 UpdateItems(gameTime);
@@ -447,8 +413,7 @@ namespace Quisling
                 // exit when they have collected all of the items.
                 if (Player.IsAlive &&
                     Player.IsOnGround &&
-                    Player.BoundingRectangle.Contains(exit))
-                {
+                    Player.BoundingRectangle.Contains(exit)) {
                     OnExitReached();
                 }
             }
@@ -461,16 +426,13 @@ namespace Quisling
         /// <summary>
         /// Animates each item and checks to allows the player to collect them.
         /// </summary>
-        private void UpdateItems(GameTime gameTime)
-        {
-            for (int i = 0; i < items.Count; ++i)
-            {
+        private void UpdateItems(GameTime gameTime) {
+            for (int i = 0; i < items.Count; ++i) {
                 Item item = items[i];
 
                 item.Update(gameTime);
 
-                if (item.BoundingCircle.Intersects(Player.BoundingRectangle))
-                {
+                if (item.BoundingCircle.Intersects(Player.BoundingRectangle)) {
                     items.RemoveAt(i--);
                     OnItemCollected(item, Player);
                     CollectedItems++;
@@ -481,15 +443,12 @@ namespace Quisling
         /// <summary>
         /// Animates each enemy and allow them to kill the player.
         /// </summary>
-        private void UpdateEnemies(GameTime gameTime)
-        {
-            foreach (Enemy enemy in enemies)
-            {
+        private void UpdateEnemies(GameTime gameTime) {
+            foreach (Enemy enemy in enemies) {
                 enemy.Update(gameTime);
 
                 // Touching an enemy instantly kills the player
-                if (enemy.BoundingRectangle.Intersects(Player.BoundingRectangle))
-                {
+                if (enemy.BoundingRectangle.Intersects(Player.BoundingRectangle)) {
                     OnPlayerKilled(enemy);
                 }
             }
@@ -500,8 +459,7 @@ namespace Quisling
         /// </summary>
         /// <param name="item">The item that was collected.</param>
         /// <param name="collectedBy">The player who collected this item.</param>
-        private void OnItemCollected(Item item, Player collectedBy)
-        {
+        private void OnItemCollected(Item item, Player collectedBy) {
             score += Item.PointValue;
 
             item.OnCollected(collectedBy);
@@ -514,16 +472,14 @@ namespace Quisling
         /// The enemy who killed the player. This is null if the player was not killed by an
         /// enemy, such as when a player falls into a hole.
         /// </param>
-        private void OnPlayerKilled(Enemy killedBy)
-        {
+        private void OnPlayerKilled(Enemy killedBy) {
             Player.OnKilled(killedBy);
         }
 
         /// <summary>
         /// Called when the player reaches the level's exit.
         /// </summary>
-        private void OnExitReached()
-        {
+        private void OnExitReached() {
             if (TotalItems == CollectedItems) {
                 Player.OnReachedExit();
                 exitReachedSound.Play();
@@ -536,8 +492,7 @@ namespace Quisling
         /// <summary>
         /// Restores the player to the starting point to try the level again.
         /// </summary>
-        public void StartNewLife()
-        {
+        public void StartNewLife() {
             Player.Reset(start);
         }
 
@@ -551,14 +506,14 @@ namespace Quisling
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch) {
             spriteBatch.Begin();
             //for (int i = 0; i <= EntityLayer; ++i)
-                layers[0].Draw(spriteBatch, cameraPositionXAxis);
+            layers[0].Draw(spriteBatch, cameraPositionXAxis);
             spriteBatch.End();
 
             ScrollCamera(spriteBatch.GraphicsDevice.Viewport);
             //Matrix cameraTransform = Matrix.CreateTranslation(-cameraPositionXAxis, 0.0f, 0.0f);
             Matrix cameraTransform = Matrix.CreateTranslation(-cameraPositionXAxis, -cameraPositionYAxis, 0.0f);
             //spriteBatch.Begin(SpriteBlendMode.AlphaBlend, SpriteSortMode.Immediate, SaveStateMode.None, cameraTransform);
-            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null,null,null,null,cameraTransform);
+            spriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, cameraTransform);
 
             DrawTiles(spriteBatch);
 
@@ -578,67 +533,62 @@ namespace Quisling
             spriteBatch.End();
         }
 
-        private void ScrollCamera(Viewport viewport)
-    {
+        private void ScrollCamera(Viewport viewport) {
 #if ZUNE
 const float ViewMargin = 0.45f;
 #else
-const float ViewMargin = 0.35f;
+            const float ViewMargin = 0.35f;
 #endif
 
-      // Calculate the edges of the screen.
-      float marginWidth = viewport.Width * ViewMargin;
-      float marginLeft = cameraPositionXAxis + marginWidth;
-      float marginRight = cameraPositionXAxis + viewport.Width - marginWidth;
-      const float TopMargin = 0.3f;
-      const float BottomMargin = 0.1f;
-      float marginTop = cameraPositionYAxis + viewport.Height * TopMargin;
-      float marginBottom = cameraPositionYAxis + viewport.Height - viewport.Height * BottomMargin;
+            // Calculate the edges of the screen.
+            float marginWidth = viewport.Width * ViewMargin;
+            float marginLeft = cameraPositionXAxis + marginWidth;
+            float marginRight = cameraPositionXAxis + viewport.Width - marginWidth;
+            const float TopMargin = 0.3f;
+            const float BottomMargin = 0.1f;
+            float marginTop = cameraPositionYAxis + viewport.Height * TopMargin;
+            float marginBottom = cameraPositionYAxis + viewport.Height - viewport.Height * BottomMargin;
 
-      float maxCameraPositionYOffset = Tile.Height * Height - viewport.Height;
+            float maxCameraPositionYOffset = Tile.Height * Height - viewport.Height;
 
-      // Calculate how far to scroll when the player is near the edges of the screen.
-      float cameraMovement = 0.0f;
-      if (Player.Position.X < marginLeft)
-        cameraMovement = Player.Position.X - marginLeft;
-      else if (Player.Position.X > marginRight)
-        cameraMovement = Player.Position.X - marginRight;
+            // Calculate how far to scroll when the player is near the edges of the screen.
+            float cameraMovement = 0.0f;
+            if (Player.Position.X < marginLeft)
+                cameraMovement = Player.Position.X - marginLeft;
+            else if (Player.Position.X > marginRight)
+                cameraMovement = Player.Position.X - marginRight;
 
-      // Calculate how far to vertically scroll when the player is near the top or bottom of the screen.  
-      float cameraMovementY = 0.0f;
-      if (Player.Position.Y < marginTop) //above the top margin  
-          cameraMovementY = Player.Position.Y - marginTop;
-      else if (Player.Position.Y > marginBottom) //below the bottom margin  
-          cameraMovementY = Player.Position.Y - marginBottom;  
+            // Calculate how far to vertically scroll when the player is near the top or bottom of the screen.  
+            float cameraMovementY = 0.0f;
+            if (Player.Position.Y < marginTop) //above the top margin  
+                cameraMovementY = Player.Position.Y - marginTop;
+            else if (Player.Position.Y > marginBottom) //below the bottom margin  
+                cameraMovementY = Player.Position.Y - marginBottom;
 
 
-      // Update the camera position, but prevent scrolling off the ends of the level.
-      float maxCameraPosition = Tile.Width * Width - viewport.Width;
-      cameraPositionXAxis = MathHelper.Clamp(cameraPositionXAxis + cameraMovement, 0.0f, maxCameraPosition);
+            // Update the camera position, but prevent scrolling off the ends of the level.
+            float maxCameraPosition = Tile.Width * Width - viewport.Width;
+            cameraPositionXAxis = MathHelper.Clamp(cameraPositionXAxis + cameraMovement, 0.0f, maxCameraPosition);
 
-      cameraPositionYAxis = MathHelper.Clamp(cameraPositionYAxis + cameraMovementY, 0.0f, maxCameraPositionYOffset); 
+            cameraPositionYAxis = MathHelper.Clamp(cameraPositionYAxis + cameraMovementY, 0.0f, maxCameraPositionYOffset);
 
         }
 
         /// <summary>
         /// Draws each tile in the level.
         /// </summary>
-        private void DrawTiles(SpriteBatch spriteBatch)
-        {
+        private void DrawTiles(SpriteBatch spriteBatch) {
             // Calculate the visible range of tiles.
             int left = (int)Math.Floor(cameraPositionXAxis / Tile.Width);
             int right = left + spriteBatch.GraphicsDevice.Viewport.Width / Tile.Width;
             right = Math.Min(right, Width - 1);
 
             // For each tile position
-            for (int y = 0; y < Height; ++y)
-            {
-                for (int x = left; x <= right; ++x)
-                {
+            for (int y = 0; y < Height; ++y) {
+                for (int x = left; x <= right; ++x) {
                     // If there is a visible tile in that position
                     Texture2D texture = tiles[x, y].Texture;
-                    if (texture != null)
-                    {
+                    if (texture != null) {
                         // Draw it in screen space.
                         Vector2 position = new Vector2(x, y) * Tile.Size;
                         spriteBatch.Draw(texture, position, Color.White);

@@ -63,7 +63,7 @@ namespace Quisling {
         Vector2 velocity;
 
         // Constants for controling horizontal movement
-        private const float MoveAcceleration = 9000.0f;
+        private const float MoveAcceleration = 10000.0f;
         private const float MaxMoveSpeed = 1750.0f;
         private const float GroundDragFactor = 0.48f;
         private const float AirDragFactor = 0.58f;
@@ -101,8 +101,7 @@ namespace Quisling {
 
         private bool isShooting;
         private bool isClimbing;
-        public bool IsClimbing
-        {
+        public bool IsClimbing {
             get { return isClimbing; }
         }
         private bool wasClimbing;
@@ -188,158 +187,139 @@ namespace Quisling {
         /// once per frame. We also pass the game's orientation because when using the accelerometer,
         /// we need to reverse our motion when the orientation is in the LandscapeRight orientation.
         /// </remarks>
-            public void Update(GameTime gameTime)
-            {
-                GetInput();
- 
-                ApplyPhysics(gameTime);
- 
-                //LADDER
-                if (IsAlive)
-                {
-                    //This if statement deals with running/idling
-                    if (isOnGround)
-                    {
-                        //If Velocity.X is > 0 in any direction, play runAnimation
-                        if (Math.Abs(Velocity.X) - 0.02f > 0)
-                            sprite.PlayAnimation(runAnimation);
-                        //Otherwise, sit still (idleAnimation)
-                        else
-                            sprite.PlayAnimation(idleAnimation);
-                    }
-                    //This if statement deals with ladder climbing
-                    else if (isClimbing)
-                    {
-                        //If he's moving down play ladderDownAnimation
-                        if (Velocity.Y - 0.02f > 0)
-                            sprite.PlayAnimation(climbAnimation);
-                        //If he's moving up play ladderUpAnimation
-                        else if (Velocity.Y - 0.02f < 0)
-                            sprite.PlayAnimation(climbAnimation);
-                        //Otherwise, just stand on the ladder (idleAnimation)
-                        else
-                            sprite.PlayAnimation(idleAnimation);
-                    }
+        public void Update(GameTime gameTime) {
+            GetInput();
+
+            ApplyPhysics(gameTime);
+
+            //LADDER
+            if (IsAlive) {
+                //This if statement deals with running/idling
+                if (isOnGround) {
+                    //If Velocity.X is > 0 in any direction, play runAnimation
+                    if (Math.Abs(Velocity.X) - 0.02f > 0)
+                        sprite.PlayAnimation(runAnimation);
+                    //Otherwise, sit still (idleAnimation)
+                    else
+                        sprite.PlayAnimation(idleAnimation);
                 }
- 
-                //Reset our variables every frame
-                movement = Vector2.Zero;
-                wasClimbing = isClimbing;
-                isClimbing = false;
- 
-                // Clear input.
-                isJumping = false;
+                    //This if statement deals with ladder climbing
+                else if (isClimbing) {
+                    //If he's moving down play ladderDownAnimation
+                    if (Velocity.Y - 0.02f > 0)
+                        sprite.PlayAnimation(climbAnimation);
+                    //If he's moving up play ladderUpAnimation
+                    else if (Velocity.Y - 0.02f < 0)
+                        sprite.PlayAnimation(climbAnimation);
+                    //Otherwise, just stand on the ladder (idleAnimation)
+                    else
+                        sprite.PlayAnimation(idleAnimation);
+                }
             }
+
+            //Reset our variables every frame
+            movement = Vector2.Zero;
+            wasClimbing = isClimbing;
+            isClimbing = false;
+
+            // Clear input.
+            isJumping = false;
+        }
 
         /// <summary>
         /// Gets player horizontal movement and jump commands from input.
         /// </summary>
-            private void GetInput()
-            {
-                // Get input state.
-                GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
-                KeyboardState keyboardState = Keyboard.GetState();
- 
-                // Get analog horizontal movement.
-                //movement = gamePadState.ThumbSticks.Left.X * MoveStickScale;
-                movement.X = gamePadState.ThumbSticks.Left.X * MoveStickScale;
-                movement.Y = gamePadState.ThumbSticks.Left.Y * MoveStickScale;
- 
-                // Ignore small movements to prevent running in place.
-                //if (Math.Abs(movement) < 0.5f)
-                //    movement = 0.0f;
-                if (Math.Abs(movement.X) < 0.5f)
-                    movement.X = 0.0f;
-                if (Math.Abs(movement.Y) < 0.5f)
-                    movement.Y = 0.0f;
- 
-                // If any digital horizontal movement input is found, override the analog movement.
-                if (gamePadState.IsButtonDown(Buttons.DPadLeft) ||
-                    keyboardState.IsKeyDown(Keys.Left) ||
-                    keyboardState.IsKeyDown(Keys.A))
-                {
-                    //movement = -1.0f;
-                    movement.X = -1.0f;
-                }
-                else if (gamePadState.IsButtonDown(Buttons.DPadRight) ||
-                         keyboardState.IsKeyDown(Keys.Right) ||
-                         keyboardState.IsKeyDown(Keys.D))
-                {
-                    //movement = 1.0f;
-                    movement.X = 1.0f;
-                }
- 
-                //LADDER
-                if (gamePadState.IsButtonDown(Buttons.DPadUp) ||
-                    //gamePadState.ThumbSticks.Left.Y > 0.75 ||
-                    keyboardState.IsKeyDown(Keys.Up) ||
-                    keyboardState.IsKeyDown(Keys.W))
-                {
-                    isClimbing = false;
- 
-                    if (IsAlignedToLadder())
-                    {
-                        //We need to check the tile behind the player,
-                        //not what he is standing on
-                        if (level.GetTileCollisionBehindPlayer(position) == TileCollision.Ladder)
-                        {
-                            isClimbing = true;
-                            isJumping = false;
-                            isOnGround = false;
-                            movement.Y = -1.0f;
-                        }
-                    }
-                }
-                else if (gamePadState.IsButtonDown(Buttons.DPadDown) ||
-                         //gamePadState.ThumbSticks.Left.Y < -0.75 ||
-                         keyboardState.IsKeyDown(Keys.Down) ||
-                         keyboardState.IsKeyDown(Keys.S))
-                {
-                    isClimbing = false;
- 
-                    if (IsAlignedToLadder())
-                    {
-                        // Check the tile the player is standing on
-                        if (level.GetTileCollisionBelowPlayer(level.Player.Position) == TileCollision.Ladder)
-                        {
-                            isClimbing = true;
-                            isJumping = false;
-                            isOnGround = false;
-                            movement.Y = 2.0f;
-                        }
-                    }
-                }
- 
-                // Check if the player wants to jump.
-                isJumping =
-                    gamePadState.IsButtonDown(JumpButton) ||
-                    keyboardState.IsKeyDown(Keys.Space) ||
-                    //keyboardState.IsKeyDown(Keys.Up) ||
-                    keyboardState.IsKeyDown(Keys.W);
+        private void GetInput() {
+            // Get input state.
+            GamePadState gamePadState = GamePad.GetState(PlayerIndex.One);
+            KeyboardState keyboardState = Keyboard.GetState();
+
+            // Get analog horizontal movement.
+            //movement = gamePadState.ThumbSticks.Left.X * MoveStickScale;
+            movement.X = gamePadState.ThumbSticks.Left.X * MoveStickScale;
+            movement.Y = gamePadState.ThumbSticks.Left.Y * MoveStickScale;
+
+            // Ignore small movements to prevent running in place.
+            //if (Math.Abs(movement) < 0.5f)
+            //    movement = 0.0f;
+            if (Math.Abs(movement.X) < 0.5f)
+                movement.X = 0.0f;
+            if (Math.Abs(movement.Y) < 0.5f)
+                movement.Y = 0.0f;
+
+            // If any digital horizontal movement input is found, override the analog movement.
+            if (gamePadState.IsButtonDown(Buttons.DPadLeft) ||
+                keyboardState.IsKeyDown(Keys.Left) ||
+                keyboardState.IsKeyDown(Keys.A)) {
+                //movement = -1.0f;
+                movement.X = -1.0f;
+            } else if (gamePadState.IsButtonDown(Buttons.DPadRight) ||
+                       keyboardState.IsKeyDown(Keys.Right) ||
+                       keyboardState.IsKeyDown(Keys.D)) {
+                //movement = 1.0f;
+                movement.X = 1.0f;
             }
- 
+
             //LADDER
-            private bool IsAlignedToLadder()
-            {
-                int playerOffset = ((int)position.X % Tile.Width) - Tile.Center;
- 
-                if (Math.Abs(playerOffset) <= LadderAlignment &&
-                    level.GetTileCollisionBelowPlayer(new Vector2(
-                        level.Player.position.X,
-                        level.Player.position.Y + 1)) == TileCollision.Ladder ||
-                    level.GetTileCollisionBelowPlayer(new Vector2(
-                        level.Player.position.X,
-                        level.Player.position.Y - 1)) == TileCollision.Ladder)
-                {
-                    // Align the player with the middle of the tile
-                    position.X -= playerOffset;
-                    return true;
+            if (gamePadState.IsButtonDown(Buttons.DPadUp) ||
+                //gamePadState.ThumbSticks.Left.Y > 0.75 ||
+                keyboardState.IsKeyDown(Keys.Up) ||
+                keyboardState.IsKeyDown(Keys.W)) {
+                isClimbing = false;
+
+                if (IsAlignedToLadder()) {
+                    //We need to check the tile behind the player,
+                    //not what he is standing on
+                    if (level.GetTileCollisionBehindPlayer(position) == TileCollision.Ladder) {
+                        isClimbing = true;
+                        isJumping = false;
+                        isOnGround = false;
+                        movement.Y = -1.0f;
+                    }
                 }
-                else
-                {
-                    return false;
+            } else if (gamePadState.IsButtonDown(Buttons.DPadDown) ||
+                //gamePadState.ThumbSticks.Left.Y < -0.75 ||
+                       keyboardState.IsKeyDown(Keys.Down) ||
+                       keyboardState.IsKeyDown(Keys.S)) {
+                isClimbing = false;
+
+                if (IsAlignedToLadder()) {
+                    // Check the tile the player is standing on
+                    if (level.GetTileCollisionBelowPlayer(level.Player.Position) == TileCollision.Ladder) {
+                        isClimbing = true;
+                        isJumping = false;
+                        isOnGround = false;
+                        movement.Y = 2.0f;
+                    }
                 }
             }
+
+            // Check if the player wants to jump.
+            isJumping =
+                gamePadState.IsButtonDown(JumpButton) ||
+                keyboardState.IsKeyDown(Keys.Space) ||
+                //keyboardState.IsKeyDown(Keys.Up) ||
+                keyboardState.IsKeyDown(Keys.W);
+        }
+
+        //LADDER
+        private bool IsAlignedToLadder() {
+            int playerOffset = ((int)position.X % Tile.Width) - Tile.Center;
+
+            if (Math.Abs(playerOffset) <= LadderAlignment &&
+                level.GetTileCollisionBelowPlayer(new Vector2(
+                    level.Player.position.X,
+                    level.Player.position.Y + 1)) == TileCollision.Ladder ||
+                level.GetTileCollisionBelowPlayer(new Vector2(
+                    level.Player.position.X,
+                    level.Player.position.Y - 1)) == TileCollision.Ladder) {
+                // Align the player with the middle of the tile
+                position.X -= playerOffset;
+                return true;
+            } else {
+                return false;
+            }
+        }
 
 
 
@@ -357,21 +337,18 @@ namespace Quisling {
             //velocity.Y = MathHelper.Clamp(velocity.Y + GravityAcceleration * elapsed, -MaxFallSpeed, MaxFallSpeed);
 
             // Ladder
-            if (!isClimbing)
-            {
+            if (!isClimbing) {
                 if (wasClimbing)
-                velocity.Y = 0;
+                    velocity.Y = 0;
                 else
                     velocity.Y = MathHelper.Clamp(
                         velocity.Y + GravityAcceleration * elapsed,
                             -MaxFallSpeed,
                                 MaxFallSpeed);
-                                    }
-                                    else
-                                    {
-                                    velocity.Y = movement.Y * MoveAcceleration * elapsed;
-                                    }
- 
+            } else {
+                velocity.Y = movement.Y * MoveAcceleration * elapsed;
+            }
+
             velocity.X += movement.X * MoveAcceleration * elapsed;
 
             velocity.Y = DoJump(velocity.Y, gameTime);
@@ -424,7 +401,7 @@ namespace Quisling {
                 if ((!wasJumping && IsOnGround) || jumpTime > 0.0f) {
                     if (jumpTime == 0.0f)
                         jumpSound.Play();
-                    
+
                     jumpTime += (float)gameTime.ElapsedGameTime.TotalSeconds;
                     sprite.PlayAnimation(jumpAnimation);
                 }
@@ -479,25 +456,20 @@ namespace Quisling {
                             // Resolve the collision along the shallow axis.
                             if (absDepthY < absDepthX || collision == TileCollision.Platform) {
                                 // If we crossed the top of a tile, we are on the ground.
-                                        //LADDER
-                                        // If we crossed the top of a tile, we are on the ground.
-                                        if (previousBottom <= tileBounds.Top)
-                                        {
-                                            if (collision == TileCollision.Ladder)
-                                            {
-                                                if (!isClimbing && !isJumping)
-                                                {
-                                                    // When walking over a ladder
-                                                    isOnGround = true;
-                                                }
-                                            }
-                                            else
-                                            {
-                                                isOnGround = true;
-                                                isClimbing = false;
-                                                isJumping = false;
-                                            }
+                                //LADDER
+                                // If we crossed the top of a tile, we are on the ground.
+                                if (previousBottom <= tileBounds.Top) {
+                                    if (collision == TileCollision.Ladder) {
+                                        if (!isClimbing && !isJumping) {
+                                            // When walking over a ladder
+                                            isOnGround = true;
                                         }
+                                    } else {
+                                        isOnGround = true;
+                                        isClimbing = false;
+                                        isJumping = false;
+                                    }
+                                }
 
                                 // Ignore platforms, unless we are on the ground.
                                 if (collision == TileCollision.Impassable || IsOnGround) {
@@ -515,14 +487,14 @@ namespace Quisling {
                                 // Perform further collisions with the new bounds.
                                 bounds = BoundingRectangle;
                             } else if (collision == TileCollision.Ladder && !isClimbing) {
-                            // When walking in front of a ladder, falling off a ladder
-                            // but not climbing
- 
-                            // Resolve the collision along the Y axis.
-                            Position = new Vector2(Position.X, Position.Y);
- 
-                            // Perform further collisions with the new bounds.
-                            bounds = BoundingRectangle;
+                                // When walking in front of a ladder, falling off a ladder
+                                // but not climbing
+
+                                // Resolve the collision along the Y axis.
+                                Position = new Vector2(Position.X, Position.Y);
+
+                                // Perform further collisions with the new bounds.
+                                bounds = BoundingRectangle;
                             }
                         }
                     }
@@ -558,10 +530,8 @@ namespace Quisling {
             sprite.PlayAnimation(celebrateAnimation);
         }
 
-        public void shootingAnimation()
-        {
-            if (isShooting && isOnGround)
-            {
+        public void shootingAnimation() {
+            if (isShooting && isOnGround) {
                 sprite.PlayAnimation(shootAnimation);
             }
         }

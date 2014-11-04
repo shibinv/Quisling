@@ -11,18 +11,15 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Quisling
-{
+namespace Quisling {
     /// <summary>
     /// Controls playback of an Animation.
     /// </summary>
-    struct AnimationPlayer
-    {
+    struct AnimationPlayer {
         /// <summary>
         /// Gets the animation which is currently playing.
         /// </summary>
-        public Animation Animation
-        {
+        public Animation Animation {
             get { return animation; }
         }
         Animation animation;
@@ -30,8 +27,7 @@ namespace Quisling
         /// <summary>
         /// Gets the index of the current frame in the animation.
         /// </summary>
-        public int FrameIndex
-        {
+        public int FrameIndex {
             get { return frameIndex; }
         }
         int frameIndex;
@@ -44,16 +40,14 @@ namespace Quisling
         /// <summary>
         /// Gets a texture origin at the bottom center of each frame.
         /// </summary>
-        public Vector2 Origin
-        {
+        public Vector2 Origin {
             get { return new Vector2(Animation.FrameWidth / 2.0f, Animation.FrameHeight); }
         }
 
         /// <summary>
         /// Begins or continues playback of an animation.
         /// </summary>
-        public void PlayAnimation(Animation animation)
-        {
+        public void PlayAnimation(Animation animation) {
             // If this animation is already running, do not restart it.
             if (Animation == animation)
                 return;
@@ -67,24 +61,19 @@ namespace Quisling
         /// <summary>
         /// Advances the time position and draws the current frame of the animation.
         /// </summary>
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects)
-        {
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch, Vector2 position, SpriteEffects spriteEffects) {
             if (Animation == null)
                 throw new NotSupportedException("No animation is currently playing.");
 
             // Process passing time.
             time += (float)gameTime.ElapsedGameTime.TotalSeconds;
-            while (time > Animation.FrameTime)
-            {
+            while (time > Animation.FrameTime) {
                 time -= Animation.FrameTime;
 
                 // Advance the frame index; looping or clamping as appropriate.
-                if (Animation.IsLooping)
-                {
+                if (Animation.IsLooping) {
                     frameIndex = (frameIndex + 1) % Animation.FrameCount;
-                }
-                else
-                {
+                } else {
                     frameIndex = Math.Min(frameIndex + 1, Animation.FrameCount - 1);
                 }
             }

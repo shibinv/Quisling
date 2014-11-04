@@ -11,13 +11,11 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Quisling
-{
+namespace Quisling {
     /// <summary>
     /// Controls the collision detection and response behavior of a tile.
     /// </summary>
-    enum TileCollision
-    {
+    enum TileCollision {
         /// <summary>
         /// A passable tile is one which does not hinder player motion at all.
         /// </summary>
@@ -45,8 +43,7 @@ namespace Quisling
     /// <summary>
     /// Stores the appearance and collision behavior of a tile.
     /// </summary>
-    struct Tile
-    {
+    struct Tile {
         public Texture2D Texture;
         public TileCollision Collision;
 
@@ -59,8 +56,7 @@ namespace Quisling
         /// <summary>
         /// Constructs a new tile.
         /// </summary>
-        public Tile(Texture2D texture, TileCollision collision)
-        {
+        public Tile(Texture2D texture, TileCollision collision) {
             Texture = texture;
             Collision = collision;
         }

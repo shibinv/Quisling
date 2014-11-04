@@ -10,8 +10,7 @@
 using System;
 using Microsoft.Xna.Framework.Graphics;
 
-namespace Quisling
-{
+namespace Quisling {
     /// <summary>
     /// Represents an animated texture.
     /// </summary>
@@ -20,13 +19,11 @@ namespace Quisling
     /// as wide as each animation is tall. The number of frames in the
     /// animation are inferred from this.
     /// </remarks>
-    class Animation
-    {
+    class Animation {
         /// <summary>
         /// All frames in the animation arranged horizontally.
         /// </summary>
-        public Texture2D Texture
-        {
+        public Texture2D Texture {
             get { return texture; }
         }
         Texture2D texture;
@@ -34,8 +31,7 @@ namespace Quisling
         /// <summary>
         /// Duration of time to show each frame.
         /// </summary>
-        public float FrameTime
-        {
+        public float FrameTime {
             get { return frameTime; }
         }
         float frameTime;
@@ -44,8 +40,7 @@ namespace Quisling
         /// When the end of the animation is reached, should it
         /// continue playing from the beginning?
         /// </summary>
-        public bool IsLooping
-        {
+        public bool IsLooping {
             get { return isLooping; }
         }
         bool isLooping;
@@ -53,27 +48,24 @@ namespace Quisling
         /// <summary>
         /// Gets the number of frames in the animation.
         /// </summary>
-        public int FrameCount
-        {
+        public int FrameCount {
             get { return Texture.Width / FrameWidth; }
         }
 
         /// <summary>
         /// Gets the width of a frame in the animation.
         /// </summary>
-        public int FrameWidth
-        {
+        public int FrameWidth {
             // Assume square frames.
-            get { return frameWidth;}
+            get { return frameWidth; }
         }
         int frameWidth = 0;
         /// <summary>
         /// Gets the height of a frame in the animation.
         /// </summary>
-        public int FrameHeight
-        {
+        public int FrameHeight {
             get {
-                    return frameHeight;
+                return frameHeight;
             }
         }
         int frameHeight = 0;
@@ -81,8 +73,7 @@ namespace Quisling
         /// <summary>
         /// Constructors a new animation.
         /// </summary>        
-        public Animation(Texture2D texture, float frameTime, bool isLooping)
-        {
+        public Animation(Texture2D texture, float frameTime, bool isLooping) {
             this.texture = texture;
             this.frameTime = frameTime;
             this.isLooping = isLooping;

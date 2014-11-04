@@ -15,7 +15,7 @@ namespace Quisling {
             // Assumes each layer only has 3 segments.
             Textures = new Texture2D[1];
             //for (int i = 0; i < 3; ++i)
-                Textures[0] = content.Load<Texture2D>(basePath + "_" + 0);
+            Textures[0] = content.Load<Texture2D>(basePath + "_" + 0);
 
             ScrollRate = scrollRate;
         }

@@ -16,13 +16,11 @@ using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Input.Touch;
 
 
-namespace Quisling
-{
+namespace Quisling {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class QuislingGame : Microsoft.Xna.Framework.Game
-    {
+    public class QuislingGame : Microsoft.Xna.Framework.Game {
         // Resources for drawing.
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
@@ -48,15 +46,14 @@ namespace Quisling
         private KeyboardState keyboardState;
         private TouchCollection touchState;
         private AccelerometerState accelerometerState;
-        
+
         // The number of levels in the Levels directory of our content. We assume that
         // levels in our content are 0-based and that all numbers under this constant
         // have a level file present. This allows us to not need to check for the file
         // or handle exceptions, both of which can add unnecessary time to level loading.
         private const int numberOfLevels = 7;
 
-        public QuislingGame()
-        {
+        public QuislingGame() {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
 
@@ -72,8 +69,7 @@ namespace Quisling
         /// LoadContent will be called once per game and is the place to load
         /// all of your content.
         /// </summary>
-        protected override void LoadContent()
-        {
+        protected override void LoadContent() {
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
@@ -89,12 +85,10 @@ namespace Quisling
             //See http://social.msdn.microsoft.com/Forums/en/windowsphone7series/thread/c8a243d2-d360-46b1-96bd-62b1ef268c66
             //Which means its impossible to test this from VS.
             //So we have to catch the exception and throw it away
-            try
-            {
+            try {
                 MediaPlayer.IsRepeating = true;
                 MediaPlayer.Play(Content.Load<Song>("Sounds/Background"));
-            }
-            catch { }
+            } catch { }
 
             LoadNextLevel();
         }
@@ -104,20 +98,18 @@ namespace Quisling
         /// checking for collisions, gathering input, and playing audio.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Update(GameTime gameTime)
-        {
+        protected override void Update(GameTime gameTime) {
             // Handle polling for our input and handling high-level input
             HandleInput();
 
             // update our level, passing down the GameTime along with all of our input states
-            level.Update(gameTime, keyboardState, gamePadState, touchState, 
+            level.Update(gameTime, keyboardState, gamePadState, touchState,
                          accelerometerState, Window.CurrentOrientation);
 
             base.Update(gameTime);
         }
 
-        private void HandleInput()
-        {
+        private void HandleInput() {
             // get all of our input states
             keyboardState = Keyboard.GetState();
             gamePadState = GamePad.GetState(PlayerIndex.One);
@@ -127,7 +119,7 @@ namespace Quisling
             // Exit the game when back is pressed.
             if (gamePadState.Buttons.Back == ButtonState.Pressed)
                 Exit();
-            
+
             bool continuePressed =
                 keyboardState.IsKeyDown(Keys.Space) ||
                 gamePadState.IsButtonDown(Buttons.A) ||
@@ -135,14 +127,10 @@ namespace Quisling
 
             // Perform the appropriate action to advance the game and
             // to get the player back to playing.
-            if (!wasContinuePressed && continuePressed)
-            {
-                if (!level.Player.IsAlive)
-                {
+            if (!wasContinuePressed && continuePressed) {
+                if (!level.Player.IsAlive) {
                     level.StartNewLife();
-                }
-                else if (level.TimeRemaining == TimeSpan.Zero)
-                {
+                } else if (level.TimeRemaining == TimeSpan.Zero) {
                     if (level.ReachedExit)
                         LoadNextLevel();
                     else
@@ -153,11 +141,10 @@ namespace Quisling
             wasContinuePressed = continuePressed;
         }
 
-        private void LoadNextLevel()
-        {
+        private void LoadNextLevel() {
             // move to the next level
             levelIndex = (levelIndex + 1) % numberOfLevels;
-           //levelIndex = 7;
+            //levelIndex = 7;
 
             // Unloads the content for the current level before loading the next one.
             if (level != null)
@@ -169,8 +156,7 @@ namespace Quisling
                 level = new Level(Services, fileStream, levelIndex);
         }
 
-        private void ReloadCurrentLevel()
-        {
+        private void ReloadCurrentLevel() {
             --levelIndex;
             LoadNextLevel();
         }
@@ -179,8 +165,7 @@ namespace Quisling
         /// Draws the game from background to foreground.
         /// </summary>
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
-        protected override void Draw(GameTime gameTime)
-        {
+        protected override void Draw(GameTime gameTime) {
             graphics.GraphicsDevice.Clear(Color.CornflowerBlue);
 
 
@@ -195,8 +180,7 @@ namespace Quisling
             base.Draw(gameTime);
         }
 
-        private void DrawHud()
-        {
+        private void DrawHud() {
             spriteBatch.Begin();
 
             Rectangle titleSafeArea = GraphicsDevice.Viewport.TitleSafeArea;
@@ -210,12 +194,9 @@ namespace Quisling
             Color timeColor;
             if (level.TimeRemaining > WarningTime ||
                 level.ReachedExit ||
-                (int)level.TimeRemaining.TotalSeconds % 2 == 0)
-            {
+                (int)level.TimeRemaining.TotalSeconds % 2 == 0) {
                 timeColor = Color.Green;
-            }
-            else
-            {
+            } else {
                 timeColor = Color.Maroon;
             }
             DrawShadowedString(hudFont, timeString, hudLocation, timeColor);
@@ -224,27 +205,20 @@ namespace Quisling
             float timeHeight = hudFont.MeasureString(timeString).Y;
             //DrawShadowedString(hudFont, "ITEMS LEFT: " + level.Score.ToString(), hudLocation + new Vector2(0.0f, timeHeight * 1.2f), Color.DarkMagenta);
             DrawShadowedString(hudFont, "ITEMS LEFT: " + level.CollectedItems.ToString() + "/" + level.TotalItems.ToString(), hudLocation + new Vector2(0.0f, timeHeight * 1.2f), Color.DarkSalmon);
-            
+
             // Determine the status overlay message to show.
             Texture2D status = null;
-            if (level.TimeRemaining == TimeSpan.Zero)
-            {
-                if (level.ReachedExit)
-                {
+            if (level.TimeRemaining == TimeSpan.Zero) {
+                if (level.ReachedExit) {
                     status = winOverlay;
-                }
-                else
-                {
+                } else {
                     status = loseOverlay;
                 }
-            }
-            else if (!level.Player.IsAlive)
-            {
+            } else if (!level.Player.IsAlive) {
                 status = diedOverlay;
             }
 
-            if (status != null)
-            {
+            if (status != null) {
                 // Draw status message.
                 Vector2 statusSize = new Vector2(status.Width, status.Height);
                 spriteBatch.Draw(status, center - statusSize / 2, Color.White);
@@ -252,8 +226,7 @@ namespace Quisling
             spriteBatch.End();
         }
 
-        private void DrawShadowedString(SpriteFont font, string value, Vector2 position, Color color)
-        {
+        private void DrawShadowedString(SpriteFont font, string value, Vector2 position, Color color) {
             spriteBatch.DrawString(font, value, position + new Vector2(1.0f, 1.0f), Color.Black);
             spriteBatch.DrawString(font, value, position, color);
         }

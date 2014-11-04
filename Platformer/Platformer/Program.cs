@@ -9,17 +9,13 @@
 
 using System;
 
-namespace Quisling
-{
-    static class Program
-    {
+namespace Quisling {
+    static class Program {
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
-        static void Main(string[] args)
-        {
-            using (QuislingGame game = new QuislingGame())
-            {
+        static void Main(string[] args) {
+            using (QuislingGame game = new QuislingGame()) {
                 game.Run();
             }
         }
