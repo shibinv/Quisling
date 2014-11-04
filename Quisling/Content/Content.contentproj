@@ -185,13 +185,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Sounds\Background.wma">
-      <Name>Background</Name>
-      <Importer>WmaImporter</Importer>
-      <Processor>SongProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Sounds\Victory.wav">
       <Name>Victory</Name>
       <Importer>WavImporter</Importer>
@@ -331,6 +324,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Name>7</Name>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Sounds\Background.mp3">
+      <Name>Background</Name>
+      <Importer>Mp3Importer</Importer>
+      <Processor>SongProcessor</Processor>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Sounds\ItemCollected.wav">
