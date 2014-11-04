@@ -51,7 +51,7 @@ namespace Quisling {
         // levels in our content are 0-based and that all numbers under this constant
         // have a level file present. This allows us to not need to check for the file
         // or handle exceptions, both of which can add unnecessary time to level loading.
-        private const int numberOfLevels = 7;
+        private const int numberOfLevels = 8;
 
         public QuislingGame() {
             graphics = new GraphicsDeviceManager(this);
@@ -78,7 +78,7 @@ namespace Quisling {
 
             // Load overlay textures
             winOverlay = Content.Load<Texture2D>("Overlays/Win");
-            loseOverlay = Content.Load<Texture2D>("Overlays/Dead");
+            loseOverlay = Content.Load<Texture2D>("Overlays/Infected");
             diedOverlay = Content.Load<Texture2D>("Overlays/Dead");
 
             //Known issue that you get exceptions if you use Media PLayer while connected to your PC
@@ -144,7 +144,7 @@ namespace Quisling {
         private void LoadNextLevel() {
             // move to the next level
             levelIndex = (levelIndex + 1) % numberOfLevels;
-            //levelIndex = 5;
+            //levelIndex = 6;
 
             // Unloads the content for the current level before loading the next one.
             if (level != null)
@@ -190,21 +190,20 @@ namespace Quisling {
 
             // Draw time remaining. Uses modulo division to cause blinking when the
             // player is running out of time.
-            string timeString = "TIME: " + level.TimeRemaining.Minutes.ToString("00") + ":" + level.TimeRemaining.Seconds.ToString("00");
+            string timeString = "INFECTION: " + level.TimeRemaining.Minutes.ToString("00") + ":" + level.TimeRemaining.Seconds.ToString("00");
             Color timeColor;
             if (level.TimeRemaining > WarningTime ||
                 level.ReachedExit ||
                 (int)level.TimeRemaining.TotalSeconds % 2 == 0) {
-                timeColor = Color.Green;
+                timeColor = Color.Cornsilk;
             } else {
                 timeColor = Color.Maroon;
             }
             DrawShadowedString(hudFont, timeString, hudLocation, timeColor);
 
-            // Draw score
+            // Draw Vials
             float timeHeight = hudFont.MeasureString(timeString).Y;
-            //DrawShadowedString(hudFont, "ITEMS LEFT: " + level.Score.ToString(), hudLocation + new Vector2(0.0f, timeHeight * 1.2f), Color.DarkMagenta);
-            DrawShadowedString(hudFont, "ITEMS LEFT: " + level.CollectedItems.ToString() + "/" + level.TotalItems.ToString(), hudLocation + new Vector2(0.0f, timeHeight * 1.2f), Color.DarkSalmon);
+            DrawShadowedString(hudFont, "VIALS: " + level.CollectedItems.ToString() + "/" + level.TotalItems.ToString(), hudLocation + new Vector2(0.0f, timeHeight * 1.2f), Color.DarkSalmon);
 
             // Determine the status overlay message to show.
             Texture2D status = null;
