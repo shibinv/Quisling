@@ -1,4 +1,0 @@
-Quisling
-========
-
-Game Programming
