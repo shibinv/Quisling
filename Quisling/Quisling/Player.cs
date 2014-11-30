@@ -318,7 +318,7 @@ namespace Quisling {
 
             if (keyboardState.IsKeyDown(Keys.X))
             {
-                bullets.Add(position + new Vector2(level.Player.BoundingRectangle.Width /2, 0));
+                bullets.Add(position - new Vector2(-level.Player.BoundingRectangle.Width + 10, (level.Player.BoundingRectangle.Height / 2)-10));
                 sprite.PlayAnimation(shootAnimation);
             }
 
