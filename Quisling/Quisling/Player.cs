@@ -164,7 +164,7 @@ namespace Quisling {
 
             //load bullets
             bullets = new List<Vector2>();
-            bulletForward = Level.Content.Load<Texture2D>("Sprites/Projectiles/BulletMain");
+            bulletForward = Level.Content.Load<Texture2D>("Sprites/Projectiles/Bullet");
 
             //bulletOffset = new Vector2(position.Y += 2);
 
