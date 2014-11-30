@@ -37,6 +37,13 @@ namespace Quisling {
         }
         Vector2 position;
 
+        public bool Alive
+        {
+            get { return alive; }
+            set { alive = value; }
+        }
+        bool alive;
+
         private Rectangle localBounds;
         /// <summary>
         /// Gets a rectangle which bounds this enemy in world space.
@@ -81,6 +88,7 @@ namespace Quisling {
         public Enemy(Level level, Vector2 position, string spriteSet) {
             this.level = level;
             this.position = position;
+            this.alive = true;
 
             LoadContent(spriteSet);
         }
@@ -110,7 +118,8 @@ namespace Quisling {
         public void Update(GameTime gameTime) {
             float elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-            // Calculate tile position based on the side we are walking towards.
+            // Calculate tile 
+            //based on the side we are walking towards.
             float posX = Position.X + localBounds.Width / 2 * (int)direction;
             int tileX = (int)Math.Floor(posX / Tile.Width) - (int)direction;
             int tileY = (int)Math.Floor(Position.Y / Tile.Height);

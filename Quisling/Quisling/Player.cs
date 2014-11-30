@@ -13,6 +13,7 @@ using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Input.Touch;
+using System.Collections.Generic;
 
 namespace Quisling {
     /// <summary>
@@ -99,12 +100,16 @@ namespace Quisling {
         private bool wasJumping;
         private float jumpTime;
 
-        private bool isShooting;
         private bool isClimbing;
         public bool IsClimbing {
             get { return isClimbing; }
         }
         private bool wasClimbing;
+
+        List<Vector2> bullets;
+        float bulletSpeed = 300f;
+        Texture2D bulletForward;
+        Vector2 bulletOffset;
 
         private Rectangle localBounds;
         /// <summary>
@@ -126,7 +131,6 @@ namespace Quisling {
             this.level = level;
 
             LoadContent();
-
             Reset(position);
         }
 
@@ -141,12 +145,9 @@ namespace Quisling {
             celebrateAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-idle"), 0.1f, false, 95, 95);
             climbAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-climb"), 0.1f, true, 95, 95);
             dieAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/bro-die"), 0.1f, false, 95, 95);
-            shootAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/IdleFire"), 0.1f, true, 96, 96);
-            movingShootAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/WalkFire"), 0.1f, true, 95, 95);
-            jumpingShootAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/JumpFire"), 0.1f, true, 95, 95);
+            shootAnimation = new Animation(Level.Content.Load<Texture2D>("Sprites/Player/IdleFire"), 1.0f, true, 95, 95);
 
-
-
+                
             // Calculate bounds within texture size.            
             int width = (int)(idleAnimation.FrameWidth * 0.4);
             int left = (idleAnimation.FrameWidth - width) / 2;
@@ -161,6 +162,11 @@ namespace Quisling {
             //int top = idleAnimation.FrameHeight - height;
             //localBounds = new Rectangle(20, 63, 25, 38);
 
+            //load bullets
+            bullets = new List<Vector2>();
+            bulletForward = Level.Content.Load<Texture2D>("Sprites/Projectiles/BulletMain");
+
+            //bulletOffset = new Vector2(position.Y += 2);
 
             // Load sounds.            
             killedSound = Level.Content.Load<SoundEffect>("Sounds/PlayerKilled");
@@ -224,6 +230,13 @@ namespace Quisling {
 
             // Clear input.
             isJumping = false;
+
+            for (int i = 0; i < bullets.Count; i++)
+            {
+                float x = bullets[i].X;
+                x += bulletSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                bullets[i] = new Vector2(x, bullets[i].Y); 
+            }
         }
 
         /// <summary>
@@ -294,16 +307,27 @@ namespace Quisling {
                 }
             }
 
+
             // Check if the player wants to jump.
             isJumping =
                 gamePadState.IsButtonDown(JumpButton) ||
                 keyboardState.IsKeyDown(Keys.Space) ||
                 //keyboardState.IsKeyDown(Keys.Up) ||
                 keyboardState.IsKeyDown(Keys.W);
+
+
+            if (keyboardState.IsKeyDown(Keys.X))
+            {
+                bullets.Add(position + new Vector2(level.Player.BoundingRectangle.Width /2, 0));
+                sprite.PlayAnimation(shootAnimation);
+            }
+
+
         }
 
         //LADDER
-        private bool IsAlignedToLadder() {
+        private bool IsAlignedToLadder()
+        {
             int playerOffset = ((int)position.X % Tile.Width) - Tile.Center;
 
             if (Math.Abs(playerOffset) <= LadderAlignment &&
@@ -521,6 +545,7 @@ namespace Quisling {
                 fallSound.Play();
 
             sprite.PlayAnimation(dieAnimation);
+           
         }
 
         /// <summary>
@@ -530,11 +555,6 @@ namespace Quisling {
             sprite.PlayAnimation(celebrateAnimation);
         }
 
-        public void shootingAnimation() {
-            if (isShooting && isOnGround) {
-                sprite.PlayAnimation(shootAnimation);
-            }
-        }
 
         /// <summary>
         /// Draws the animated player.
@@ -550,6 +570,11 @@ namespace Quisling {
 
             // Draw that sprite.
             sprite.Draw(gameTime, spriteBatch, Position, flip);
+
+            for (int i = 0; i < bullets.Count; i++)
+            {
+                spriteBatch.Draw(bulletForward, bullets[i], Color.White);
+            }
         }
     }
 }
