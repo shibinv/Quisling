@@ -106,10 +106,10 @@ namespace Quisling {
         }
         private bool wasClimbing;
 
-        List<Vector2> bullets;
-        float bulletSpeed = 300f;
-        Texture2D bulletForward;
-        Vector2 bulletOffset;
+        //List<Vector2> bullets;
+        //float bulletSpeed = 300f;
+        //Texture2D bulletForward;
+        //Vector2 bulletOffset;
 
         private Rectangle localBounds;
         /// <summary>
@@ -163,8 +163,8 @@ namespace Quisling {
             //localBounds = new Rectangle(20, 63, 25, 38);
 
             //load bullets
-            bullets = new List<Vector2>();
-            bulletForward = Level.Content.Load<Texture2D>("Sprites/Projectiles/Bullet");
+            //bullets = new List<Vector2>();
+            //bulletForward = Level.Content.Load<Texture2D>("Sprites/Projectiles/Bullet");
 
             //bulletOffset = new Vector2(position.Y += 2);
 
@@ -231,12 +231,12 @@ namespace Quisling {
             // Clear input.
             isJumping = false;
 
-            for (int i = 0; i < bullets.Count; i++)
-            {
-                float x = bullets[i].X;
-                x += bulletSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                bullets[i] = new Vector2(x, bullets[i].Y); 
-            }
+            //for (int i = 0; i < bullets.Count; i++)
+            //{
+            //    float x = bullets[i].X;
+            //    x += bulletSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+            //    bullets[i] = new Vector2(x, bullets[i].Y); 
+            //}
         }
 
         /// <summary>
@@ -316,11 +316,11 @@ namespace Quisling {
                 keyboardState.IsKeyDown(Keys.W);
 
 
-            if (keyboardState.IsKeyDown(Keys.X))
-            {
-                bullets.Add(position - new Vector2(-level.Player.BoundingRectangle.Width + 10, (level.Player.BoundingRectangle.Height / 2)-10));
-                sprite.PlayAnimation(shootAnimation);
-            }
+            //if (keyboardState.IsKeyDown(Keys.X))
+            //{
+            //    bullets.Add(position - new Vector2(-level.Player.BoundingRectangle.Width + 10, (level.Player.BoundingRectangle.Height / 2)-10));
+            //    sprite.PlayAnimation(shootAnimation);
+            //}
 
 
         }
@@ -571,10 +571,10 @@ namespace Quisling {
             // Draw that sprite.
             sprite.Draw(gameTime, spriteBatch, Position, flip);
 
-            for (int i = 0; i < bullets.Count; i++)
-            {
-                spriteBatch.Draw(bulletForward, bullets[i], Color.White);
-            }
+            //for (int i = 0; i < bullets.Count; i++)
+            //{
+            //    spriteBatch.Draw(bulletForward, bullets[i], Color.White);
+            //}
         }
     }
 }
