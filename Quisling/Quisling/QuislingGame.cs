@@ -44,6 +44,7 @@ namespace Quisling {
         // then we use the same input state wherever needed
         private GamePadState gamePadState;
         private KeyboardState keyboardState;
+        private KeyboardState pkeyboardState;
         private TouchCollection touchState;
         private AccelerometerState accelerometerState;
 
@@ -51,7 +52,7 @@ namespace Quisling {
         // levels in our content are 0-based and that all numbers under this constant
         // have a level file present. This allows us to not need to check for the file
         // or handle exceptions, both of which can add unnecessary time to level loading.
-        private const int numberOfLevels = 9;
+        private const int numberOfLevels = 10;
 
         public QuislingGame() {
             graphics = new GraphicsDeviceManager(this);
@@ -125,6 +126,11 @@ namespace Quisling {
                 gamePadState.IsButtonDown(Buttons.A) ||
                 touchState.AnyTouch();
 
+            // level skip for testing
+            if (keyboardState.IsKeyDown(Keys.Q) && keyboardState.IsKeyDown(Keys.P) && !pkeyboardState.IsKeyDown(Keys.P)) {
+                LoadNextLevel();
+            }
+
             // Perform the appropriate action to advance the game and
             // to get the player back to playing.
             if (!wasContinuePressed && continuePressed) {
@@ -139,6 +145,7 @@ namespace Quisling {
             }
 
             wasContinuePressed = continuePressed;
+            pkeyboardState = Keyboard.GetState();
         }
 
         private void LoadNextLevel() {
@@ -204,6 +211,9 @@ namespace Quisling {
             // Draw Vials
             float timeHeight = hudFont.MeasureString(timeString).Y;
             DrawShadowedString(hudFont, "VIALS: " + level.CollectedItems.ToString() + "/" + level.TotalItems.ToString(), hudLocation + new Vector2(0.0f, timeHeight * 1.2f), Color.DarkSalmon);
+
+            // draw level
+            DrawShadowedString(hudFont, "LEVEL: " + ((int)levelIndex + 1), hudLocation + new Vector2(0.0f, timeHeight * 2.4f), timeColor);
 
             // Determine the status overlay message to show.
             Texture2D status = null;
