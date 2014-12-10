@@ -127,9 +127,9 @@ namespace Quisling {
                 touchState.AnyTouch();
 
             // level skip for testing
-            if (keyboardState.IsKeyDown(Keys.Q) && keyboardState.IsKeyDown(Keys.P) && !pkeyboardState.IsKeyDown(Keys.P)) {
-                LoadNextLevel();
-            }
+            //if (keyboardState.IsKeyDown(Keys.Q) && keyboardState.IsKeyDown(Keys.P) && !pkeyboardState.IsKeyDown(Keys.P)) {
+            //    LoadNextLevel();
+            //}
 
             // Perform the appropriate action to advance the game and
             // to get the player back to playing.
